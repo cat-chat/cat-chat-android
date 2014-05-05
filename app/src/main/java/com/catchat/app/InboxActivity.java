@@ -26,8 +26,9 @@ import org.json.JSONException;
 public class InboxActivity extends Activity {
 
     private static final int CONTACT_PICKER_RESULT = 1;
-    public static final int IMAGE_PICKER = 2;
-    private int mImageId;
+    private static final int IMAGE_PICKER = 2;
+
+    private String mImageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +98,18 @@ public class InboxActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICKER) {
             Bundle extras = data.getExtras();
-            mImageId = extras.getInt("imageid");
+            mImageId = extras.getString("imageid");
 
             getEmailAddressFromContacts();
         } else if (resultCode == RESULT_OK && requestCode == CONTACT_PICKER_RESULT) {
             Contact c = getEmailAddress(data);
 
             if (c != null) {
+                ParseObject dummyImage = ParseObject.createWithoutData("CatImage", mImageId);
+
                 ParseObject gameScore = new ParseObject("PendingMessage");
                 gameScore.put("fromUser", ParseUser.getCurrentUser());
+                gameScore.put("image", dummyImage);
                 gameScore.put("toEmail", c.email());
                 gameScore.saveInBackground(new SaveCallback() {
                     @Override
