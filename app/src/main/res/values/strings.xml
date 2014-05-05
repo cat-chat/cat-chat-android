@@ -6,5 +6,8 @@
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="facebook">Facebook</string>
+    <string name="title_activity_inbox">InboxActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
