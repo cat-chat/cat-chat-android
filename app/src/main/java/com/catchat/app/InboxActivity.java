@@ -2,6 +2,8 @@ package com.catchat.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,6 +12,8 @@ import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import org.json.JSONException;
 
 
 public class InboxActivity extends Activity {
@@ -20,9 +24,13 @@ public class InboxActivity extends Activity {
 
         setContentView(R.layout.activity_inbox);
 
-        if(ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+        if(ParseFacebookUtils.isLinked(ParseUser.getCurrentUser()) && currentUserHasNoEmailAddress()) {
             retrieveEmailAddress();
         }
+    }
+
+    private boolean currentUserHasNoEmailAddress() {
+        return TextUtils.isEmpty(ParseUser.getCurrentUser().getEmail());
     }
 
     private void retrieveEmailAddress() {
@@ -32,10 +40,20 @@ public class InboxActivity extends Activity {
                     public void onCompleted(GraphUser user, Response response) {
                         if (user != null) {
 
+                            try {
+                                String email = user.getInnerJSONObject().get("email").toString();
+
+                                ParseUser.getCurrentUser().setEmail(email);
+                                ParseUser.getCurrentUser().saveEventually();
+                            } catch (JSONException e) {
+                                Log.e("CatChatInbox", "Failed to parse JSON from FB", e);
+                            }
+
                         }
                     }
                 }
         );
+        request.executeAsync();
     }
 
     @Override
