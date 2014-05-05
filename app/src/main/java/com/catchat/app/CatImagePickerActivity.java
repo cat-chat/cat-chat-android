@@ -46,13 +46,14 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
     private void pullAndCacheLatestCatPics() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> catImages, ParseException e) {
                 if (e == null) {
-                    Log.d("CatChatTag", "Retrieved " + catImages.size() + " scores");
-                    ((CatAdapter) mGridView.getAdapter()).setItems(catImages);
-                    ((CatAdapter) mGridView.getAdapter()).notifyDataSetChanged();
+                    Log.d("CatChatTag", "Retrieved " + catImages.size() + " pic(s)");
+                    CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
+                    adapter.setItems(catImages);
+                    adapter.notifyDataSetChanged();
                 } else {
                     Log.d("CatChatTag", "Error pulling cat pics: " + e.getMessage(), e);
                 }
