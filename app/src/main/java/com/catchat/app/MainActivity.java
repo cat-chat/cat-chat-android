@@ -40,8 +40,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mLoginButton = (Button) findViewById(R.id.login);
         mLoginButton.setOnClickListener(this);
 
-        if(ParseUser.getCurrentUser() != null) {
+        if (ParseUser.getCurrentUser() != null) {
             showInboxActivity();
+            finish();
         }
     }
 
@@ -49,9 +50,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         if (view.getId() == R.id.facebook) {
             onLoginButtonClicked();
-        } else if(view.getId() == R.id.signup) {
+        } else if (view.getId() == R.id.signup) {
             startActivity(new Intent(this, SignUpActivity.class));
-        } else if(view.getId() == R.id.login) {
+        } else if (view.getId() == R.id.login) {
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
@@ -86,5 +87,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void showInboxActivity() {
         startActivity(new Intent(this, InboxActivity.class));
+        finish();
     }
 }

@@ -51,6 +51,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
 
                 if (e == null) {
                     startActivity(new Intent(SignUpActivity.this, InboxActivity.class));
+                    finish();
                 } else {
                     Log.e("CatChatSignUp", "Failed to signup", e);
                 }

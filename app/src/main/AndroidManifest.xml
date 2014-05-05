@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name="com.catchat.app.InboxActivity"
-            android:label="@string/title_activity_inbox" >
+            android:label="@string/messages"
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
@@ -37,7 +38,7 @@
             android:label="@string/log_in"/>
         <activity
             android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up">
+            android:label="@string/sign_up">
         </activity>
     </application>
 
