@@ -26,3 +26,5 @@ proguard/
 .idea/
 
 **hidden_strings.xml
+
+**.DS_Store
