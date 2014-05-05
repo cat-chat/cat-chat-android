@@ -2,16 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.catchat.app" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.catchat.app.CatChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".CatChatApplication">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.catchat.app.LoginActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
             <intent-filter>
@@ -24,8 +24,21 @@
             android:name="com.catchat.app.InboxActivity"
             android:label="@string/title_activity_inbox" >
         </activity>
-        <activity android:name="com.facebook.LoginActivity" android:label="@string/app_name" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
+
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/fb_app_id" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/log_in"/>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up">
+        </activity>
     </application>
 
 </manifest>

@@ -39,18 +39,10 @@
 
     </com.catchat.app.FloatLabelLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:id="@+id/forgotpassword"/>
-
     <Button
-        android:id="@+id/login"
-        android:layout_below="@id/forgotpassword"
-        android:text="@string/log_in"
+        android:id="@+id/signup"
+        android:layout_below="@id/password"
+        android:text="@string/sign_up"
         android:background="@color/orange"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
