@@ -1,4 +1,4 @@
-package com.catchat.app;
+package com.catchat.app.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;

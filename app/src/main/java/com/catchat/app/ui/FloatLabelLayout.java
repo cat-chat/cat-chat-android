@@ -1,4 +1,4 @@
-package com.catchat.app;
+package com.catchat.app.ui;
 
 /*
  * Copyright (C) 2014 Chris Banes
@@ -31,6 +31,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.catchat.app.R;
 
 /**
  * Layout which an {@link android.widget.EditText} to show a floating label when the hint is hidden

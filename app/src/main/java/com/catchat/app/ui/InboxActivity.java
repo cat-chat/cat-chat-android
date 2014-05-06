@@ -1,4 +1,4 @@
-package com.catchat.app;
+package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.catchat.app.Contact;
+import com.catchat.app.R;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;

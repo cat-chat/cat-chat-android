@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.catchat.app.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
             <intent-filter>
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.catchat.app.InboxActivity"
+            android:name=".ui.InboxActivity"
             android:label="@string/messages"
             android:theme="@style/AppTheme" >
         </activity>
@@ -36,14 +36,14 @@
             android:value="@string/fb_app_id" />
 
         <activity
-            android:name="com.catchat.app.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/log_in" />
         <activity
-            android:name="com.catchat.app.SignUpActivity"
+            android:name=".ui.SignUpActivity"
             android:label="@string/sign_up" >
         </activity>
         <activity
-            android:name="com.catchat.app.CatImagePickerActivity"
+            android:name=".ui.CatImagePickerActivity"
             android:label="@string/title_activity_cat_image_picker" >
         </activity>
     </application>

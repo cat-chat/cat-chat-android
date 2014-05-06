@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.catchat.app.InboxActivity" >
+    tools:context="com.catchat.app.ui.InboxActivity" >
 
     <item android:id="@+id/action_add"
         android:title="@string/add"

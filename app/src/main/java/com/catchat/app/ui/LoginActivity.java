@@ -1,4 +1,4 @@
-package com.catchat.app;
+package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -10,24 +10,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.catchat.app.R;
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
+public class LoginActivity extends Activity implements View.OnClickListener {
 
-public class SignUpActivity extends Activity implements View.OnClickListener {
-
-    private Button mSignUpButton;
+    private Button mLoginButton;
     private Dialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_login);
 
-        mSignUpButton = (Button) findViewById(R.id.signup);
-        mSignUpButton.setOnClickListener(this);
+        mLoginButton = (Button) findViewById(R.id.login);
+        mLoginButton.setOnClickListener(this);
     }
 
     @Override
@@ -38,19 +38,14 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
         String emailAddress = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        mProgressDialog = ProgressDialog.show(SignUpActivity.this, "", "Signing up...", true);
+        mProgressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
 
-        ParseUser user = new ParseUser();
-        user.setUsername(emailAddress);
-        user.setPassword(password);
-        user.setEmail(emailAddress);
-
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
+        ParseUser.logInInBackground(emailAddress, password, new LogInCallback() {
+            public void done(ParseUser user, ParseException e) {
                 mProgressDialog.dismiss();
 
                 if (e == null) {
-                    startActivity(new Intent(SignUpActivity.this, InboxActivity.class));
+                    startActivity(new Intent(LoginActivity.this, InboxActivity.class));
                     finish();
                 } else {
                     Log.e("CatChatSignUp", "Failed to signup", e);
