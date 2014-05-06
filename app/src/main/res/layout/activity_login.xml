@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:floatLabelTextAppearance="@style/AppTheme.FloatLabel">
+        app:floatLabelTextAppearance="@style/AppTheme.FloatLabel.DarkOrange">
 
         <EditText
             android:id="@+id/email"
@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/account_email_hint"
             android:singleLine="true"
-            android:inputType="textNoSuggestions"
+            android:textColorHint="@color/dark_orange"
+            android:inputType="textEmailAddress"
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/edit_password" />
 
@@ -26,12 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:floatLabelTextAppearance="@style/AppTheme.FloatLabel">
+        app:floatLabelTextAppearance="@style/AppTheme.FloatLabel.DarkOrange">
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColorHint="@color/dark_orange"
             android:hint="@string/account_password_hint"
             android:singleLine="true"
             android:inputType="textPassword"
@@ -51,10 +53,10 @@
         android:id="@+id/login"
         android:layout_below="@id/forgotpassword"
         android:text="@string/log_in"
-        android:background="@color/orange"
+        android:background="@drawable/darkorange_button_selector"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/button_height"
         android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
 </LinearLayout>

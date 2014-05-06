@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="Buttondarkorange" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/darkorange_button_selector</item>
+  </style>
+
+  <style name="ImageButtondarkorange" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/darkorange_button_selector</item>
+  </style>
+
+</resources>

@@ -1,22 +1,34 @@
 <resources>
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:editTextBackground">@drawable/turquoise_edittext_selector</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:icon">@drawable/white_logo</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/turquoise</item>
         <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/turquoise</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.FloatLabel" parent="android:TextAppearance.Small">
-        <item name="android:textColor">@color/turquoise</item>
+    <style name="AppTheme.FloatLabel.DarkOrange" parent="android:TextAppearance.Small">
+        <item name="android:textColor">@color/dark_orange</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTheme.FloatLabel.Orange" parent="android:TextAppearance.Small">
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SplashScreen" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
 </resources>
