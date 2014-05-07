@@ -1,7 +1,11 @@
 package com.catchat.app.ui;
 
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,27 +14,35 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
+import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.Contact;
 import com.catchat.app.R;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
+import java.util.List;
 
-public class InboxActivity extends Activity {
+
+public class InboxActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CONTACT_PICKER_RESULT = 1;
     private static final int IMAGE_PICKER = 2;
 
     private String mImageId;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +53,40 @@ public class InboxActivity extends Activity {
         if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser()) && currentUserHasNoEmailAddress()) {
             retrieveEmailAddress();
         }
+
+        refreshMessages();
+
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                R.layout.contact_row,
+                null,
+                new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL},
+                new int[]{R.id.contact_textview},
+                android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        getLoaderManager().initLoader(0, null, this);
+
+        mListView = (ListView) findViewById(R.id.listview);
+        mListView.setAdapter(adapter);
+    }
+
+    private void refreshMessages() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
+        query.include("fromUser");
+        query.whereEqualTo("toUser", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> messages, ParseException e) {
+                for (ParseObject m : messages) {
+                    ContentValues v = new ContentValues();
+                    v.put(CatChatContentProvider.MESSAGE_PARSE_ID, m.getObjectId());
+                    v.put(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, m.getParseObject("fromUser").getString("email"));
+                    v.put(CatChatContentProvider.MESSAGE_CONTENTS, m.getString("messageData"));
+                    v.put(CatChatContentProvider.MESSAGE_SENT_TIME, m.getCreatedAt().toString());
+
+                    getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_URI, v);
+                }
+            }
+        });
     }
 
     private boolean currentUserHasNoEmailAddress() {
@@ -82,7 +128,7 @@ public class InboxActivity extends Activity {
         if (id == R.id.action_add) {
             startNewMessage();
             return true;
-        } else if(id == R.id.logout) {
+        } else if (id == R.id.logout) {
             ParseUser.logOut();
             startActivity(new Intent(this, MainActivity.class));
             finish();
@@ -113,11 +159,11 @@ public class InboxActivity extends Activity {
             if (c != null) {
                 ParseObject dummyImage = ParseObject.createWithoutData("CatImage", mImageId);
 
-                ParseObject gameScore = new ParseObject("PendingMessage");
-                gameScore.put("fromUser", ParseUser.getCurrentUser());
-                gameScore.put("image", dummyImage);
-                gameScore.put("toEmail", c.email());
-                gameScore.saveInBackground(new SaveCallback() {
+                ParseObject pendingMessage = new ParseObject("PendingMessage");
+                pendingMessage.put("fromUser", ParseUser.getCurrentUser());
+                pendingMessage.put("image", dummyImage);
+                pendingMessage.put("toEmail", c.email());
+                pendingMessage.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         Log.e("CatChatTag", "lol", e);
@@ -138,7 +184,7 @@ public class InboxActivity extends Activity {
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                     null,
                     ContactsContract.CommonDataKinds.Phone._ID + " = ?",
-                    new String[] { id },
+                    new String[]{id},
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
 
             if (cursor.moveToFirst()) {
@@ -156,5 +202,24 @@ public class InboxActivity extends Activity {
         }
 
         return c;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this, CatChatContentProvider.MESSAGES_TABLE_URI,new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.ID}, null, null, null);
+    }
+
+    private SimpleCursorAdapter getAdapter() {
+        return ((SimpleCursorAdapter)mListView.getAdapter());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
+        getAdapter().swapCursor(c);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        getAdapter().swapCursor(null);
     }
 }
