@@ -82,6 +82,10 @@ public class InboxActivity extends Activity {
         if (id == R.id.action_add) {
             startNewMessage();
             return true;
+        } else if(id == R.id.logout) {
+            ParseUser.logOut();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
