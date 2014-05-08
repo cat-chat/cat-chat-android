@@ -10,6 +10,7 @@ public class CatChatApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
 
         ParseFacebookUtils.initialize(getString(R.string.fb_app_id));

@@ -13,5 +13,6 @@
     <string name="messages">Messages</string>
     <string name="title_activity_cat_image_picker">Cat Picker</string>
     <string name="logout">Logout</string>
+    <string name="send">Send</string>
 
 </resources>

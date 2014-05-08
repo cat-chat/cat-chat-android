@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageview"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/catchat_bg"/>
+
+    <EditText
+        android:id="@+id/top_edittext"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:inputType="textNoSuggestions|textMultiLine"
+        android:textColor="@android:color/white"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="1.0"
+        android:shadowDy="-1.0"
+        android:shadowRadius="2.0"
+        android:textSize="32sp"
+        android:layout_alignTop="@id/imageview"
+        android:background="@color/transparent_black" />
+
+    <EditText
+        android:id="@+id/bottom_edittext"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions|textMultiLine"
+        android:maxLines="2"
+        android:textColor="@android:color/white"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="1.0"
+        android:shadowDy="-1.0"
+        android:shadowRadius="2.0"
+        android:textSize="32sp"
+        android:layout_alignBottom="@id/imageview"
+        android:background="@color/transparent_black" />
+
+</RelativeLayout>

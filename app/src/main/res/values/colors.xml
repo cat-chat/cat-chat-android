@@ -4,4 +4,5 @@
     <color name="orange">#FF843B</color>
     <color name="dark_orange">#9E4511</color>
     <color name="facebook_blue">#3B5998</color>
+    <color name="transparent_black">#30000000</color>
 </resources>
