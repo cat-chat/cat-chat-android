@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.catchat.app.Contact;
 import com.catchat.app.R;
@@ -29,6 +30,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -89,28 +91,47 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
             Contact c = getEmailAddress(data);
 
             if (c != null) {
-                ParseObject dummyImage = ParseObject.createWithoutData("CatImage", mImageId);
+                try {
+                    ParseObject dummyImage = ParseObject.createWithoutData("CatImage", mImageId);
 
-                ParseObject pendingMessage = new ParseObject("PendingMessage");
-                pendingMessage.put("fromUser", ParseUser.getCurrentUser());
-                pendingMessage.put("image", dummyImage);
-                pendingMessage.put("messageData", getMessageData());
-                pendingMessage.put("toEmail", c.email());
-                pendingMessage.saveEventually();
+                    ParseObject pendingMessage = new ParseObject("PendingMessage");
+                    pendingMessage.put("fromUser", ParseUser.getCurrentUser());
+                    pendingMessage.put("image", dummyImage);
+                    pendingMessage.put("messageData", getMessageData());
+                    pendingMessage.put("toEmail", c.email());
+                    pendingMessage.saveEventually();
 
-                finish();
+                    finish();
+                } catch (JSONException e) {
+                    Log.e("CatChatTag", "Failed to create message", e);
+                    Toast.makeText(this, "Failed to create Message :-(", Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private String getMessageData() {
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("top", mTopEditText.getText().toString().trim());
-        map.put("bottom", mBottomEditText.getText().toString().trim());
+    private String getMessageData() throws JSONException {
+        HashMap<String, Object> topObject = buildJsonFromEditText(mTopEditText);
+        HashMap<String, Object> bottomObject = buildJsonFromEditText(mBottomEditText);
 
-        return new JSONObject(map).toString();
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("top", topObject);
+        map.put("bottom", bottomObject);
+
+        String msgData = new JSONObject(map).toString();
+        Log.d("CatChatTag", msgData);
+        return msgData;
+    }
+
+    private HashMap<String, Object> buildJsonFromEditText(EditText editText) {
+        HashMap<String, Object> object = new HashMap<String, Object>();
+
+        object.put("text", editText.getText().toString().trim());
+        object.put("fontsize", editText.getTextSize());
+
+        return object;
     }
 
     private Contact getEmailAddress(Intent data) {
