@@ -14,6 +14,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.Arrays;
@@ -32,7 +33,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         ParseAnalytics.trackAppOpened(getIntent());
+        ParseInstallation.getCurrentInstallation().saveInBackground();
 
         mFacebookButton = (Button) findViewById(R.id.facebook);
         mFacebookButton.setOnClickListener(this);
