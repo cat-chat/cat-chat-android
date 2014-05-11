@@ -28,6 +28,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
@@ -62,6 +63,26 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         mListView.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
+
+        pullAndCacheLatestCatPics();
+    }
+
+    private void pullAndCacheLatestCatPics() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> catImages, ParseException e) {
+                if (e == null && catImages != null) {
+                    ParseObject.pinAllInBackground(catImages, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Log.d("CatChatTag", "done caching");
+                        }
+                    });
+
+                    Log.d("CatChatTag", "Retrieved " + catImages.size() + " pic(s)");
+                }
+            }
+        });
     }
 
     @Override
@@ -79,7 +100,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         queryMessages.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> messages, ParseException e) {
-                if(messages == null || e != null) return;
+                if (messages == null || e != null) return;
 
                 Log.d("CatChatTag", "msgs: " + messages.size(), e);
 
@@ -91,7 +112,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
                     v.put(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, m.getParseObject("fromUser").getString("email"));
                     v.put(CatChatContentProvider.MESSAGE_CONTENTS, m.getString("messageData"));
                     v.put(CatChatContentProvider.MESSAGE_SENT_TIME, m.getCreatedAt().toString());
-                    Log.d("CatChatTag", "inserting msg from: "+ m.getObjectId() + " " + m.getParseObject("fromUser").getObjectId() + " " + m.getCreatedAt());
+                    Log.d("CatChatTag", "inserting msg from: " + m.getObjectId() + " " + m.getParseObject("fromUser").getObjectId() + " " + m.getCreatedAt());
                     getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
 
                     //m.deleteInBackground();
@@ -167,11 +188,11 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI,new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID, CatChatContentProvider.ID}, null, null, null);
+        return new CursorLoader(this, CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID, CatChatContentProvider.ID}, null, null, null);
     }
 
     private SimpleCursorAdapter getAdapter() {
-        return ((SimpleCursorAdapter)mListView.getAdapter());
+        return ((SimpleCursorAdapter) mListView.getAdapter());
     }
 
     @Override
@@ -191,6 +212,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
 
         Intent intent = new Intent(this, ConversationActivity.class);
         intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
+        intent.putExtra("fromUserEmail", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL)));
 
         startActivity(intent);
     }

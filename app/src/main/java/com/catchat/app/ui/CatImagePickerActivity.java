@@ -21,7 +21,6 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +47,10 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
     private void pullAndCacheLatestCatPics() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
+        query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> catImages, ParseException e) {
                 if (e == null && catImages != null) {
-                    ParseObject.pinAllInBackground(catImages, new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            Log.d("CatChatTag", "done caching");
-                        }
-                    });
-
-                    Log.d("CatChatTag", "Retrieved " + catImages.size() + " pic(s)");
-
                     CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
                     adapter.setItems(catImages);
                     adapter.notifyDataSetChanged();

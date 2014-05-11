@@ -44,6 +44,9 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
 
         Bundle extras = getIntent().getExtras();
         mUserId = extras.getString("fromUserId");
+        String userEmail = extras.getString("fromUserEmail");
+
+        getActionBar().setTitle(userEmail);
 
         final ListAdapter adapter = new ConversationAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
@@ -64,7 +67,6 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
-        Log.d("CatChatTag", "ConvoAct, found: " + c.getCount());
         ((CursorAdapter) getListView().getAdapter()).swapCursor(c);
     }
 
@@ -90,7 +92,25 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             String imageId = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_IMAGE_ID));
+            String contents = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_CONTENTS));
 
+            setCatImage(view, imageId);
+            setTopAndBottomCaptions(view, contents);
+        }
+
+        private void setTopAndBottomCaptions(View view, String contents) {
+
+            try {
+                JSONObject jsonObject = new JSONObject(contents);
+
+                parseJsonAndSetText(view, jsonObject.getJSONObject("top"), R.id.top_textview);
+                parseJsonAndSetText(view, jsonObject.getJSONObject("bottom"), R.id.bottom_textview);
+            } catch (JSONException e) {
+                Log.e("CatChatTag", "Error parsing message JSON", e);
+            }
+        }
+
+        private void setCatImage(View view, String imageId) {
             final ImageView imageView = (ImageView) view.findViewById(R.id.imageview);
 
             // TODO: request elsewhere
@@ -116,16 +136,6 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
                     }
                 }
             });
-
-            String contents = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_CONTENTS));
-            try {
-                JSONObject jsonObject = new JSONObject(contents);
-
-                parseJsonAndSetText(view, jsonObject.getJSONObject("top"), R.id.top_textview);
-                parseJsonAndSetText(view, jsonObject.getJSONObject("bottom"), R.id.bottom_textview);
-            } catch (JSONException e) {
-                Log.e("CatChatTag", "Error parsing message JSON", e);
-            }
         }
 
         private void parseJsonAndSetText(View view, JSONObject jsonObject, int id) throws JSONException {
