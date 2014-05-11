@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.catchat.app.R;
 import com.parse.LogInCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
@@ -31,6 +32,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        ParseAnalytics.trackAppOpened(getIntent());
 
         mFacebookButton = (Button) findViewById(R.id.facebook);
         mFacebookButton.setOnClickListener(this);

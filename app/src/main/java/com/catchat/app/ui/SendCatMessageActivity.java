@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.catchat.app.Contact;
 import com.catchat.app.R;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -92,16 +94,22 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
 
             if (c != null) {
                 try {
-                    ParseObject dummyImage = ParseObject.createWithoutData("CatImage", mImageId);
+                    HashMap<String, Object> map = new HashMap<String, Object>();
 
-                    ParseObject pendingMessage = new ParseObject("PendingMessage");
-                    pendingMessage.put("fromUser", ParseUser.getCurrentUser());
-                    pendingMessage.put("image", dummyImage);
-                    pendingMessage.put("messageData", getMessageData());
-                    pendingMessage.put("toEmail", c.email());
-                    pendingMessage.saveEventually();
+                    map.put("fromUser", ParseUser.getCurrentUser().getObjectId());
+                    map.put("image", mImageId);
+                    map.put("messageData", getMessageData());
+                    map.put("toEmail", c.email());
 
-                    finish();
+                    ParseCloud.callFunctionInBackground("sendMessage",map, new FunctionCallback<Object>() {
+                                @Override
+                                public void done(Object o, ParseException e) {
+                                    Log.d("CatChatTag", "callback: " + o, e);
+                                }
+                            });
+
+
+                            finish();
                 } catch (JSONException e) {
                     Log.e("CatChatTag", "Failed to create message", e);
                     Toast.makeText(this, "Failed to create Message :-(", Toast.LENGTH_SHORT).show();

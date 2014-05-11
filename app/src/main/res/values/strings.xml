@@ -14,5 +14,10 @@
     <string name="title_activity_cat_image_picker">Cat Picker</string>
     <string name="logout">Logout</string>
     <string name="send">Send</string>
+    <string name="title_activity_conversation">ConversationActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="logging_in">Logging in...</string>
+    <string name="signing_up">Signing up...</string>
 
 </resources>

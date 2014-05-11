@@ -60,7 +60,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Tex
         String emailAddress = getEmailAddress();
         String password = getPassword();
 
-        mProgressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
+        mProgressDialog = ProgressDialog.show(LoginActivity.this, "", getString(R.string.logging_in), true);
 
         ParseUser.logInInBackground(emailAddress, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {

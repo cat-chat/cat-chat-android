@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -32,7 +34,7 @@ import org.json.JSONException;
 import java.util.List;
 
 
-public class InboxActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class InboxActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private static final int IMAGE_PICKER = 1;
 
@@ -48,36 +50,51 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
             retrieveEmailAddress();
         }
 
-        refreshMessages();
-
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.contact_row,
                 null,
-                new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL},
+                new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID},
                 new int[]{R.id.contact_textview},
                 android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
-        getLoaderManager().initLoader(0, null, this);
-
         mListView = (ListView) findViewById(R.id.listview);
+        mListView.setOnItemClickListener(this);
         mListView.setAdapter(adapter);
+
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refreshMessages();
     }
 
     private void refreshMessages() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Message");
-        query.include("fromUser");
-        query.whereEqualTo("toUser", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> queryMessages = ParseQuery.getQuery("Message");
+        queryMessages.whereEqualTo("toUser", ParseUser.getCurrentUser());
+        queryMessages.include("fromUser");
+        queryMessages.orderByAscending("createdAt");
+        queryMessages.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> messages, ParseException e) {
+                if(messages == null || e != null) return;
+
+                Log.d("CatChatTag", "msgs: " + messages.size(), e);
+
                 for (ParseObject m : messages) {
                     ContentValues v = new ContentValues();
                     v.put(CatChatContentProvider.MESSAGE_PARSE_ID, m.getObjectId());
+                    v.put(CatChatContentProvider.MESSAGE_IMAGE_ID, m.getParseObject("image").getObjectId());
+                    v.put(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID, m.getParseObject("fromUser").getObjectId());
                     v.put(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, m.getParseObject("fromUser").getString("email"));
                     v.put(CatChatContentProvider.MESSAGE_CONTENTS, m.getString("messageData"));
                     v.put(CatChatContentProvider.MESSAGE_SENT_TIME, m.getCreatedAt().toString());
+                    Log.d("CatChatTag", "inserting msg from: "+ m.getObjectId() + " " + m.getParseObject("fromUser").getObjectId() + " " + m.getCreatedAt());
+                    getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
 
-                    getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_URI, v);
+                    //m.deleteInBackground();
                 }
             }
         });
@@ -150,7 +167,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, CatChatContentProvider.MESSAGES_TABLE_URI,new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.ID}, null, null, null);
+        return new CursorLoader(this, CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI,new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID, CatChatContentProvider.ID}, null, null, null);
     }
 
     private SimpleCursorAdapter getAdapter() {
@@ -159,11 +176,22 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
+        Log.d("CatChatTag", "InboxActivity, found: " + c.getCount());
         getAdapter().swapCursor(c);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         getAdapter().swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Cursor c = (Cursor) adapterView.getAdapter().getItem(i);
+
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
+
+        startActivity(intent);
     }
 }

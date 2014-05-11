@@ -17,14 +17,19 @@ public class CatChatContentProvider extends ContentProvider {
 
     private static final UriMatcher uriMatcher;
 
-    private static final int CONTACTS = 1;
-    private static final String MESSAGES = "messages";
+    private static final int MESSAGE_BY_CONTACTS = 1;
+    private static final int MESSAGE = 2;
 
-    public static final Uri MESSAGES_TABLE_URI = Uri.withAppendedPath(CONTENT_URI, MESSAGES);
+    private static final String MESSAGES_BY_FROM_USER_PARSE_ID = "messages_group_by_from_user";
+    private static final String MESSAGES = "messages_table";
+
+    public static final Uri MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI = Uri.withAppendedPath(CONTENT_URI, MESSAGES_BY_FROM_USER_PARSE_ID);
+    public static final Uri MESSAGES_TABLE_MESSAGES = Uri.withAppendedPath(CONTENT_URI, MESSAGES);
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, MESSAGES, CONTACTS);
+        uriMatcher.addURI(AUTHORITY, MESSAGES_BY_FROM_USER_PARSE_ID, MESSAGE_BY_CONTACTS);
+        uriMatcher.addURI(AUTHORITY, MESSAGES, MESSAGE);
     }
 
     private CatChatDatabase mCatChatDatabase;
@@ -32,7 +37,9 @@ public class CatChatContentProvider extends ContentProvider {
     private static final String MESSAGES_TABLE_NAME = "Messages";
     public static final String ID = "_id";
     public static final String MESSAGE_PARSE_ID = "Message_ID";
+    public static final String MESSAGE_IMAGE_ID = "Message_Image_Id";
     public static final String MESSAGE_FROM_USER_EMAIL = "From_Email";
+    public static final String MESSAGE_FROM_USER_PARSE_ID = "From_Id";
     public static final String MESSAGE_SENT_TIME = "Message_Sent";
     public static final String MESSAGE_CONTENTS = "Message_Contents";
 
@@ -48,15 +55,16 @@ public class CatChatContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                return MESSAGES;
+            case MESSAGE:
+                return MESSAGES_TABLE_NAME;
+            case MESSAGE_BY_CONTACTS:
+                return MESSAGES_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -68,7 +76,7 @@ public class CatChatContentProvider extends ContentProvider {
         long insertedId = -1;
         try {
             SQLiteDatabase db = mCatChatDatabase.getWritableDatabase();
-            insertedId = db.insert(MESSAGES, null, values);
+            insertedId = db.insert(MESSAGES_TABLE_NAME, null, values);
         } catch (Exception e) {
             Log.e("CatChatProvider", "Exception whilst inserting Message", e);
         }
@@ -85,8 +93,8 @@ public class CatChatContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] columns, String selection, String[] selectionArgs, String sortOrder) {
         switch (uriMatcher.match(uri)) {
-            case CONTACTS:
-                return runQuery(uri, columns, selection, selectionArgs, MESSAGE_FROM_USER_EMAIL, sortOrder);
+            case MESSAGE_BY_CONTACTS:
+                return runQuery(uri, columns, selection, selectionArgs, MESSAGE_FROM_USER_PARSE_ID, sortOrder);
             default:
                 return runQuery(uri, columns, selection, selectionArgs, null, sortOrder);
         }
@@ -94,7 +102,9 @@ public class CatChatContentProvider extends ContentProvider {
 
     private Cursor runQuery(Uri uri, String[] columns, String selection, String[] selectionArgs, String groupBy, String sortOrder) {
         SQLiteDatabase db = mCatChatDatabase.getReadableDatabase();
-        return db.query(getType(uri), columns, selection, selectionArgs, groupBy, null, sortOrder);
+        Cursor cursor = db.query(getType(uri), columns, selection, selectionArgs, groupBy, null, sortOrder);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Override
@@ -116,6 +126,8 @@ public class CatChatContentProvider extends ContentProvider {
                 db.execSQL("CREATE TABLE " + MESSAGES_TABLE_NAME +
                         " (" + ID + " INTEGER PRIMARY KEY NOT NULL, " +
                         MESSAGE_PARSE_ID + " NVARCHAR(16) UNIQUE NOT NULL," +
+                        MESSAGE_IMAGE_ID + " NVARCHAR(16) NOT NULL," +
+                        MESSAGE_FROM_USER_PARSE_ID + " NVARCHAR(16) NOT NULL," +
                         MESSAGE_FROM_USER_EMAIL + " NVARCHAR(32) NOT NULL," +
                         MESSAGE_CONTENTS + " NVARCHAR NOT NULL," +
                         MESSAGE_SENT_TIME + " NVARCHAR(50) NOT NULL" + ");");

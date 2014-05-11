@@ -60,7 +60,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         String emailAddress = getEmailAddress();
         String password = getPassword();
 
-        mProgressDialog = ProgressDialog.show(SignUpActivity.this, "", "Signing up...", true);
+        mProgressDialog = ProgressDialog.show(SignUpActivity.this, "", getString(R.string.signing_up), true);
 
         ParseUser user = new ParseUser();
         user.setUsername(emailAddress);
