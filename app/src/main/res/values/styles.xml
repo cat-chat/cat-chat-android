@@ -4,6 +4,8 @@
         <item name="android:editTextBackground">@drawable/turquoise_edittext_selector</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="android:icon">@drawable/white_logo</item>
+        <item name="android:actionBarWidgetTheme">@style/AppTheme.OverflowMenu</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -29,6 +31,19 @@
 
     <style name="SplashScreen" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="AppTheme.OverflowMenu" parent="@android:style/Theme.Holo.Light">
+        <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/AppTheme.DropDownListView</item>
+    </style>
+
+    <style name="AppTheme.PopupMenu" parent="@android:style/Widget.Holo.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_</item>
+    </style>
+
+    <style name="AppTheme.DropDownListView" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/menu_selectable_background</item>
     </style>
 
 </resources>
