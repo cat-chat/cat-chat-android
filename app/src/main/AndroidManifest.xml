@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.catchat.app">
+    package="com.catchat.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
@@ -13,18 +14,21 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.catchat.app.permission.C2D_MESSAGE" />
-    <permission android:protectionLevel="signature" android:name="com.catchat.app.permission.C2D_MESSAGE" />
+
+    <permission
+        android:name="com.catchat.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
     <application
         android:name="com.catchat.app.CatChatApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="com.catchat.app.ui.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/SplashScreen">
+            android:theme="@style/SplashScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +42,7 @@
         <activity
             android:name="com.catchat.app.ui.LoginActivity"
             android:label="@string/log_in"
-            android:parentActivityName="com.catchat.app.ui.MainActivity">
+            android:parentActivityName="com.catchat.app.ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -46,7 +50,7 @@
         <activity
             android:name="com.catchat.app.ui.SignUpActivity"
             android:label="@string/sign_up"
-            android:parentActivityName="com.catchat.app.ui.MainActivity">
+            android:parentActivityName="com.catchat.app.ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -69,12 +73,12 @@
         <provider
             android:name="com.catchat.app.CatChatContentProvider"
             android:authorities="com.catchat.app.CatChatContentProvider"
-            android:exported="false"></provider>
+            android:exported="false" />
 
         <activity
             android:name="com.catchat.app.ui.ConversationActivity"
             android:label="@string/title_activity_conversation"
-            android:parentActivityName="com.catchat.app.ui.InboxActivity">
+            android:parentActivityName="com.catchat.app.ui.InboxActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="InboxActivity" />
@@ -83,7 +87,7 @@
         <!-- push notifications -->
         <service android:name="com.parse.PushService" />
 
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -91,7 +95,7 @@
         </receiver>
         <receiver
             android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -99,6 +103,13 @@
                 <category android:name="com.catchat.app" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.catchat.app.ui.FacebookFriendPicker"
+            android:label="@string/title_activity_facebook_friend_picker"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/fb_app_id"/>
     </application>
 
 </manifest>

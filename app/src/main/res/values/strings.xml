@@ -19,5 +19,7 @@
     <string name="action_settings">Settings</string>
     <string name="logging_in">Logging in...</string>
     <string name="signing_up">Signing up...</string>
+    <string name="send_to">Send to</string>
+    <string name="title_activity_facebook_friend_picker">Facebook Friend</string>
 
 </resources>

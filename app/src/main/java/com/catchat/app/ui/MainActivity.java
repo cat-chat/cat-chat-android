@@ -71,20 +71,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void onLoginButtonClicked() {
-        mProgressDialog = ProgressDialog.show(MainActivity.this, "", "Logging in...", true);
+        mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.logging_in), true);
 
-        List<String> permissions = Arrays.asList("email");
+        List<String> permissions = Arrays.asList("email", "user_friends");
         ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 MainActivity.this.mProgressDialog.dismiss();
                 if (user == null) {
-                    Log.d("CatChatLogin", "Uh oh. The user cancelled the Facebook login.");
-                } else if (user.isNew()) {
-                    Log.d("CatChatLogin", "User signed up and logged in through Facebook!");
-                    showInboxActivity();
+                    Log.d("CatChatLogin", "User cancelled Facebook login");
                 } else {
-                    Log.d("CatChatLogin", "User logged in through Facebook!");
                     showInboxActivity();
                 }
             }

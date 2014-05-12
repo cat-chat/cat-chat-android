@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="facebook_or_contacts">
+        <item>Facebook friend</item>
+        <item>Email address from Contacts</item>
+    </string-array>
+</resources>
