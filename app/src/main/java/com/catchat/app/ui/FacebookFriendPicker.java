@@ -9,8 +9,11 @@ import android.widget.Toast;
 
 import com.catchat.app.R;
 import com.facebook.FacebookException;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.FriendPickerFragment;
 import com.facebook.widget.PickerFragment;
+
+import java.util.List;
 
 public class FacebookFriendPicker extends FragmentActivity {
     FriendPickerFragment mFriendPickerFragment;
@@ -42,12 +45,16 @@ public class FacebookFriendPicker extends FragmentActivity {
         mFriendPickerFragment.setOnDoneButtonClickedListener(new PickerFragment.OnDoneButtonClickedListener() {
             @Override
             public void onDoneButtonClicked(PickerFragment<?> fragment) {
-                String id = mFriendPickerFragment.getSelection().get(0).getId();
+                List<GraphUser> selection = mFriendPickerFragment.getSelection();
 
-                Intent i = new Intent();
-                i.putExtra("fbid", id);
+                if(selection.size() > 0) {
+                    String id = selection.get(0).getId();
 
-                setResult(RESULT_OK, i);
+                    Intent i = new Intent();
+                    i.putExtra("fbid", id);
+
+                    setResult(RESULT_OK, i);
+                }
                 finish();
             }
         });

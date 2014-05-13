@@ -47,6 +47,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mLoginButton.setOnClickListener(this);
 
         if (ParseUser.getCurrentUser() != null) {
+            Log.d("lolz", "parse user: " + ParseUser.getCurrentUser().getObjectId());
             showInboxActivity();
             finish();
         }

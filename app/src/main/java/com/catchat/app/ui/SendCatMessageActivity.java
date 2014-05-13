@@ -2,8 +2,6 @@ package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,14 +26,10 @@ import android.widget.Toast;
 
 import com.catchat.app.Contact;
 import com.catchat.app.R;
-import com.facebook.Session;
-import com.facebook.SessionState;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
-import com.parse.LogInCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -44,7 +38,6 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,9 +45,8 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
     private static final int CONTACT_PICKER_RESULT = 2;
     private static final int PICK_FB_CONTACT = 3;
 
-    private ImageView mImageView;
     private String mImageId;
-    private Dialog mProgressDialog;
+    private ImageView mImageView;
 
     private EditText mTopEditText;
     private EditText mBottomEditText;
@@ -78,7 +70,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
 
         Bundle extras = getIntent().getExtras();
         mImageId = extras.getString("imageid");
-
+        Log.d("lolz", "cat msg parse user: " + ParseUser.getCurrentUser().getObjectId());
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
         query.fromLocalDatastore();
         query.whereEqualTo("objectId", mImageId);
@@ -108,10 +100,10 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
             if (c != null) {
                 sendMessage("toEmail", c.email());
             }
-        } else if(resultCode == RESULT_OK && requestCode == PICK_FB_CONTACT) {
+        } else if (resultCode == RESULT_OK && requestCode == PICK_FB_CONTACT) {
             String fbId = data.getExtras().getString("fbid");
 
-            if(!TextUtils.isEmpty(fbId)) {
+            if (!TextUtils.isEmpty(fbId)) {
                 sendMessage("toFacebook", fbId);
             }
         } else {
@@ -226,32 +218,13 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
     }
 
     private void ensureUserLoggedInToFacebookThenSendMessage() {
-        if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-            mProgressDialog = ProgressDialog.show(this, "", getString(R.string.logging_in), true);
 
-            List<String> permissions = Arrays.asList("email", "user_friends");
-            ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException err) {
-                    mProgressDialog.dismiss();
-
-                    if (user != null) {
-                        sendMessageViaFacebook();
-                    }
-                }
-            });
-        } else {
-            sendMessageViaFacebook();
-        }
+        sendMessageViaFacebook();
     }
 
     private void sendMessageViaFacebook() {
-        Session.openActiveSession(this, true, new Session.StatusCallback() {
-            @Override
-            public void call(Session session, SessionState state, Exception exception) {
-                startActivityForResult(new Intent(SendCatMessageActivity.this, FacebookFriendPicker.class), PICK_FB_CONTACT);
-            }
-        });
+        Log.d("lolz", "fb session parse user: " + ParseUser.getCurrentUser().getObjectId());
+        startActivityForResult(new Intent(SendCatMessageActivity.this, FacebookFriendPicker.class), PICK_FB_CONTACT);
     }
 
     private void getEmailAddressFromContacts() {
