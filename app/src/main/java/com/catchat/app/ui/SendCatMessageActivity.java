@@ -30,14 +30,17 @@ import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,7 +73,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
 
         Bundle extras = getIntent().getExtras();
         mImageId = extras.getString("imageid");
-        Log.d("lolz", "cat msg parse user: " + ParseUser.getCurrentUser().getObjectId());
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
         query.fromLocalDatastore();
         query.whereEqualTo("objectId", mImageId);
@@ -106,6 +109,8 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
             if (!TextUtils.isEmpty(fbId)) {
                 sendMessage("toFacebook", fbId);
             }
+        } else if (resultCode == RESULT_OK && requestCode == 32665) {
+            ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -218,12 +223,23 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
     }
 
     private void ensureUserLoggedInToFacebookThenSendMessage() {
-
-        sendMessageViaFacebook();
+        if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+            List<String> permissions = Arrays.asList(ParseFacebookUtils.Permissions.User.EMAIL, "user_friends");
+            ParseFacebookUtils.link(ParseUser.getCurrentUser(), permissions, this, new SaveCallback() {
+                @Override
+                public void done(ParseException ex) {
+                    if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+                        sendMessageViaFacebook();
+                    }
+                }
+            });
+        } else {
+            sendMessageViaFacebook();
+        }
     }
 
+
     private void sendMessageViaFacebook() {
-        Log.d("lolz", "fb session parse user: " + ParseUser.getCurrentUser().getObjectId());
         startActivityForResult(new Intent(SendCatMessageActivity.this, FacebookFriendPicker.class), PICK_FB_CONTACT);
     }
 

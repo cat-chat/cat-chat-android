@@ -47,7 +47,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mLoginButton.setOnClickListener(this);
 
         if (ParseUser.getCurrentUser() != null) {
-            Log.d("lolz", "parse user: " + ParseUser.getCurrentUser().getObjectId());
             showInboxActivity();
             finish();
         }
@@ -74,7 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void onLoginButtonClicked() {
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.logging_in), true);
 
-        List<String> permissions = Arrays.asList("email", "user_friends");
+        List<String> permissions = Arrays.asList(ParseFacebookUtils.Permissions.User.EMAIL, "user_friends");
         ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
