@@ -75,6 +75,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
                     startActivity(new Intent(SignUpActivity.this, InboxActivity.class));
                     finish();
                 } else {
+                    mEmailEditText.setError(e.getMessage());
                     Log.e("CatChatSignUp", "Failed to signup", e);
                 }
             }

@@ -8,7 +8,7 @@
     <string name="log_in_with_facebook">Log in with Facebook</string>
     <string name="account_email_hint">Email Address</string>
     <string name="account_password_hint">Password</string>
-    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
     <string name="add">Add</string>
     <string name="messages">Messages</string>
     <string name="title_activity_cat_image_picker">Cat Picker</string>
@@ -21,5 +21,7 @@
     <string name="signing_up">Signing up...</string>
     <string name="send_to">Send to</string>
     <string name="title_activity_facebook_friend_picker">Facebook Friend</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="password_reset_email_sent">Password reset email successfully sent</string>
 
 </resources>
