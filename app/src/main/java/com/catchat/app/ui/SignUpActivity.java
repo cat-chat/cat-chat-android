@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.catchat.app.R;
+import com.catchat.app.Utils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -72,6 +73,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
                 mProgressDialog.dismiss();
 
                 if (e == null) {
+                    Utils.mapInstallationToCurrentUser();
                     startActivity(new Intent(SignUpActivity.this, InboxActivity.class));
                     finish();
                 } else {

@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.R;
@@ -23,15 +25,19 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -40,6 +46,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
     private static final int IMAGE_PICKER = 1;
 
     private ListView mListView;
+    private View mEmptyViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +58,75 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
             retrieveEmailAddress();
         }
 
+        mEmptyViews = findViewById(R.id.empty_layout);
+        mListView = (ListView) findViewById(R.id.listview);
+        mListView.setOnItemClickListener(this);
+
+        pullAndCacheLatestCatPics();
+
+        if (!currentUserHasVerifiedTheirEmailAddress()) {
+            showEmailNotVerifiedWarning();
+        } else {
+            initialiseMessagesAdapter();
+        }
+    }
+
+    private void showEmailNotVerifiedWarning() {
+        TextView emptyTitle = (TextView) mEmptyViews.findViewById(R.id.empty_title);
+        TextView emptyContent = (TextView) mEmptyViews.findViewById(R.id.empty_content);
+
+        emptyTitle.setText(R.string.please_verify_email);
+        emptyContent.setText(R.string.please_verify_email_message);
+    }
+
+    private void showNoMessagesInformation() {
+        TextView emptyTitle = (TextView) mEmptyViews.findViewById(R.id.empty_title);
+        TextView emptyContent = (TextView) mEmptyViews.findViewById(R.id.empty_content);
+
+        emptyTitle.setText(R.string.no_messages);
+        emptyContent.setText(R.string.tap_plus_to_send_message);
+    }
+
+    private void initialiseMessagesAdapter() {
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 R.layout.contact_row,
                 null,
                 new String[]{CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID},
                 new int[]{R.id.contact_textview},
                 android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
-        mListView = (ListView) findViewById(R.id.listview);
-        mListView.setOnItemClickListener(this);
         mListView.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
+    }
 
-        pullAndCacheLatestCatPics();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ParseUser.getCurrentUser().refreshInBackground(new RefreshCallback() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if(e == null) {
+                    refresh();
+                }
+            }
+        });
+    }
+
+    private void refresh() {
+        if (currentUserHasVerifiedTheirEmailAddress()) {
+            showNoMessagesInformation();
+
+            if (mListView.getAdapter() == null) {
+                initialiseMessagesAdapter();
+            }
+
+            refreshMessages();
+        }
+    }
+
+    private boolean currentUserHasVerifiedTheirEmailAddress() {
+        return ParseUser.getCurrentUser().getBoolean("emailVerified");
     }
 
     private void pullAndCacheLatestCatPics() {
@@ -83,13 +145,6 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        refreshMessages();
     }
 
     private void refreshMessages() {
@@ -155,6 +210,14 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        menu.findItem(R.id.action_add).setVisible(currentUserHasVerifiedTheirEmailAddress());
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_add) {
@@ -199,6 +262,11 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor c) {
         Log.d("CatChatTag", "InboxActivity, found: " + c.getCount());
         getAdapter().swapCursor(c);
+
+        if(c != null && c.getCount() > 0) {
+            mListView.setVisibility(View.VISIBLE);
+            mEmptyViews.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -208,12 +276,28 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Cursor c = (Cursor) adapterView.getAdapter().getItem(i);
+        if (currentUserHasVerifiedTheirEmailAddress()) {
+            Cursor c = (Cursor) adapterView.getAdapter().getItem(i);
 
-        Intent intent = new Intent(this, ConversationActivity.class);
-        intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
-        intent.putExtra("fromUserEmail", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL)));
+            Intent intent = new Intent(this, ConversationActivity.class);
+            intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
+            intent.putExtra("fromUserEmail", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL)));
 
-        startActivity(intent);
+            startActivity(intent);
+        } else {
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("userid", ParseUser.getCurrentUser().getObjectId());
+
+            ParseCloud.callFunctionInBackground("resendVerificationEmail", map, new FunctionCallback<Object>() {
+                @Override
+                public void done(Object o, ParseException e) {
+                    if (e == null) {
+                        Toast.makeText(InboxActivity.this, getString(R.string.email_verification_sent), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(InboxActivity.this, getString(R.string.failed_to_send_email_verification) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

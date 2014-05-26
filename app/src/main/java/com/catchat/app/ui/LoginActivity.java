@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.catchat.app.R;
+import com.catchat.app.Utils;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -104,6 +105,7 @@ public class LoginActivity extends Activity implements View.OnClickListener, Tex
                 mProgressDialog.dismiss();
 
                 if (e == null) {
+                    Utils.mapInstallationToCurrentUser();
                     startActivity(new Intent(LoginActivity.this, InboxActivity.class));
                     finish();
                 } else {

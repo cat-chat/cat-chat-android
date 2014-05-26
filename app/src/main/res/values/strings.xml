@@ -14,7 +14,6 @@
     <string name="title_activity_cat_image_picker">Cat Picker</string>
     <string name="logout">Logout</string>
     <string name="send">Send</string>
-    <string name="title_activity_conversation">ConversationActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="logging_in">Logging in...</string>
@@ -23,5 +22,11 @@
     <string name="title_activity_facebook_friend_picker">Facebook Friend</string>
     <string name="reset_password">Reset Password</string>
     <string name="password_reset_email_sent">Password reset email successfully sent</string>
+    <string name="please_verify_email">Verify your email address</string>
+    <string name="please_verify_email_message">You will not be able to send/receive messages on CatChat without verifying your email address. Tap here to resend verification email.</string>
+    <string name="failed_to_send_email_verification">Failed to resend email verification. </string>
+    <string name="email_verification_sent">Email verification email sent.</string>
+    <string name="no_messages">No messages!</string>
+    <string name="tap_plus_to_send_message">Tap on the + at the top right of your screen to send a message and get the ball rolling.</string>
 
 </resources>

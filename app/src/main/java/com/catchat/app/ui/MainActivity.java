@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.catchat.app.R;
+import com.catchat.app.Utils;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mLoginButton.setOnClickListener(this);
 
         if (ParseUser.getCurrentUser() != null) {
+            Utils.mapInstallationToCurrentUser();
             showInboxActivity();
             finish();
         }
@@ -81,6 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if (user == null) {
                     Log.d("CatChatLogin", "User cancelled Facebook login");
                 } else {
+                    Utils.mapInstallationToCurrentUser();
                     showInboxActivity();
                 }
             }
