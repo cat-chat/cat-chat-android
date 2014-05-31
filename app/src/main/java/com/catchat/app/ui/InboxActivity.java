@@ -7,6 +7,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -166,10 +167,12 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
                     v.put(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, m.getParseObject("fromUser").getString("email"));
                     v.put(CatChatContentProvider.MESSAGE_CONTENTS, m.getString("messageData"));
                     v.put(CatChatContentProvider.MESSAGE_SENT_TIME, m.getCreatedAt().toString());
-                    Log.d("CatChatTag", "inserting msg from: " + m.getObjectId() + " " + m.getParseObject("fromUser").getObjectId() + " " + m.getCreatedAt());
-                    getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
 
-                    //m.deleteInBackground();
+                    Uri uri = getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
+
+                    if(uri.equals(Uri.withAppendedPath(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, Long.toString(1)))) {
+                        m.deleteEventually();
+                    }
                 }
             }
         });
