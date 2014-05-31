@@ -137,7 +137,10 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         queryMessages.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> messages, ParseException e) {
-                if (messages == null || e != null) return;
+                if (messages == null || e != null) {
+                    Log.d("CatChatTag", "No messages found", e);
+                    return;
+                }
 
                 for (ParseObject m : messages) {
                     ContentValues v = new ContentValues();

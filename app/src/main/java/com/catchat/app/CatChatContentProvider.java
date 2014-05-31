@@ -89,7 +89,7 @@ public class CatChatContentProvider extends ContentProvider {
 
         if (-1 != insertedId) {
             getContext().getContentResolver().notifyChange(uri, null);
-            return Uri.withAppendedPath(uri, Long.toString(insertedId));
+            return Uri.withAppendedPath(uri, Long.toString(1));
         } else {
             Log.e("CatChatProvider", "Failed to insert a Message");
             return uri;
