@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.Contact;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
@@ -44,6 +46,7 @@ import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -119,20 +122,28 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
         }
     }
 
-    private void sendMessage(String toField, String toFieldValue) {
+    private void sendMessage(String toField, final String toFieldValue) {
         try {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            final String messageData = getMessageData();
 
+            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("fromUser", ParseUser.getCurrentUser().getObjectId());
             map.put("image", mImageId);
-            map.put("messageData", getMessageData());
+            map.put("messageData", messageData);
             map.put(toField, toFieldValue);
             Log.d("CatChatTag", new JSONObject(map).toString());
 
             ParseCloud.callFunctionInBackground("sendMessage", map, new FunctionCallback<Object>() {
                 @Override
                 public void done(Object o, ParseException e) {
-                    Log.d("CatChatTag", "callback: " + o, e);
+                    if(e == null) {
+                        ContentValues v = new ContentValues();
+                        v.put(CatChatContentProvider.MESSAGE_IMAGE_ID, mImageId);
+                        v.put(CatChatContentProvider.MESSAGE_CONTENTS, messageData);
+                        v.put(CatChatContentProvider.MESSAGE_SENT_TIME, Utils.formatDate(Calendar.getInstance().getTime()));
+
+                        getContentResolver().insert(CatChatContentProvider.SENT_MESSAGES, v);
+                    }
                 }
             });
 

@@ -19,17 +19,21 @@ public class CatChatContentProvider extends ContentProvider {
 
     private static final int MESSAGE_BY_CONTACTS = 1;
     private static final int MESSAGE = 2;
+    private static final int MESSAGES_SENT = 3;
 
+    private static final String MESSAGES_SENT_TABLE_NAME = "Messages_Sent";
     private static final String MESSAGES_BY_FROM_USER_PARSE_ID = "messages_group_by_from_user";
     private static final String MESSAGES = "messages_table";
 
     public static final Uri MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI = Uri.withAppendedPath(CONTENT_URI, MESSAGES_BY_FROM_USER_PARSE_ID);
     public static final Uri MESSAGES_TABLE_MESSAGES = Uri.withAppendedPath(CONTENT_URI, MESSAGES);
+    public static final Uri SENT_MESSAGES = Uri.withAppendedPath(CONTENT_URI, MESSAGES_SENT_TABLE_NAME);
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(AUTHORITY, MESSAGES_BY_FROM_USER_PARSE_ID, MESSAGE_BY_CONTACTS);
         uriMatcher.addURI(AUTHORITY, MESSAGES, MESSAGE);
+        uriMatcher.addURI(AUTHORITY, MESSAGES_SENT_TABLE_NAME, MESSAGES_SENT);
     }
 
     private CatChatDatabase mCatChatDatabase;
@@ -65,6 +69,8 @@ public class CatChatContentProvider extends ContentProvider {
                 return MESSAGES_TABLE_NAME;
             case MESSAGE_BY_CONTACTS:
                 return MESSAGES_TABLE_NAME;
+            case MESSAGES_SENT:
+                return MESSAGES_SENT_TABLE_NAME;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -76,9 +82,9 @@ public class CatChatContentProvider extends ContentProvider {
         long insertedId = -1;
         try {
             SQLiteDatabase db = mCatChatDatabase.getWritableDatabase();
-            insertedId = db.insert(MESSAGES_TABLE_NAME, null, values);
+            insertedId = db.insert(getType(uri), null, values);
         } catch (Exception e) {
-            Log.e("CatChatProvider", "Exception whilst inserting Message", e);
+            Log.e("CatChatProvider", "Exception whilst inserting", e);
         }
 
         if (-1 != insertedId) {
@@ -132,6 +138,11 @@ public class CatChatContentProvider extends ContentProvider {
                         MESSAGE_CONTENTS + " NVARCHAR NOT NULL," +
                         MESSAGE_SENT_TIME + " NVARCHAR(50) NOT NULL" + ");");
 
+                db.execSQL("CREATE TABLE " + MESSAGES_SENT_TABLE_NAME +
+                        " (" + ID + " INTEGER PRIMARY KEY NOT NULL, " +
+                        MESSAGE_IMAGE_ID + " NVARCHAR(16) NOT NULL," +
+                        MESSAGE_CONTENTS + " NVARCHAR NOT NULL," +
+                        MESSAGE_SENT_TIME + " NVARCHAR(50) NOT NULL" + ");");
             } catch (Exception e) {
                 Log.e("CatChatProvider", e.getClass().toString(), e);
             }

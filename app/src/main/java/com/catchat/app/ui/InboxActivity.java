@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.R;
+import com.catchat.app.Utils;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
@@ -35,7 +36,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.RefreshCallback;
-import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
@@ -63,8 +63,6 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         mEmptyViews = findViewById(R.id.empty_layout);
         mListView = (ListView) findViewById(R.id.listview);
         mListView.setOnItemClickListener(this);
-
-        pullAndCacheLatestCatPics();
 
         if (!currentUserHasVerifiedTheirEmailAddress()) {
             showEmailNotVerifiedWarning();
@@ -131,24 +129,6 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         return ParseUser.getCurrentUser().getBoolean("emailVerified");
     }
 
-    private void pullAndCacheLatestCatPics() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> catImages, ParseException e) {
-                if (e == null && catImages != null) {
-                    ParseObject.pinAllInBackground(catImages, new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            Log.d("CatChatTag", "done caching");
-                        }
-                    });
-
-                    Log.d("CatChatTag", "Retrieved " + catImages.size() + " pic(s)");
-                }
-            }
-        });
-    }
-
     private void refreshMessages() {
         ParseQuery<ParseObject> queryMessages = ParseQuery.getQuery("Message");
         queryMessages.whereEqualTo("toUser", ParseUser.getCurrentUser());
@@ -166,7 +146,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
                     v.put(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID, m.getParseObject("fromUser").getObjectId());
                     v.put(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL, m.getParseObject("fromUser").getString("email"));
                     v.put(CatChatContentProvider.MESSAGE_CONTENTS, m.getString("messageData"));
-                    v.put(CatChatContentProvider.MESSAGE_SENT_TIME, m.getCreatedAt().toString());
+                    v.put(CatChatContentProvider.MESSAGE_SENT_TIME, Utils.formatDate(m.getCreatedAt()));
 
                     Uri uri = getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
 
