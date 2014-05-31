@@ -28,6 +28,7 @@ public class FacebookFriendPicker extends FragmentActivity {
         if (savedInstanceState == null) {
             final Bundle args = getIntent().getExtras();
             mFriendPickerFragment = new FriendPickerFragment(args);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.friend_picker_fragment, mFriendPickerFragment)
                     .commit();

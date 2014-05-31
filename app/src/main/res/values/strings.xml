@@ -28,5 +28,9 @@
     <string name="email_verification_sent">Email verification email sent.</string>
     <string name="no_messages">No messages!</string>
     <string name="tap_plus_to_send_message">Tap on the + at the top right of your screen to send a message and get the ball rolling.</string>
+    <string name="fb_msg_name">Come join me on CatChat</string>
+    <string name="fb_msg_caption">Send messages via the medium of cute cats!</string>
+    <string name="fb_msg_description">Create and share messages via the medium of cats!</string>
+    <string name="invite">Invite FB Friends</string>
 
 </resources>

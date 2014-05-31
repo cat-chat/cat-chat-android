@@ -24,6 +24,7 @@ import com.catchat.app.R;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.FacebookDialog;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -157,8 +158,6 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
             public void done(List<ParseObject> messages, ParseException e) {
                 if (messages == null || e != null) return;
 
-                Log.d("CatChatTag", "msgs: " + messages.size(), e);
-
                 for (ParseObject m : messages) {
                     ContentValues v = new ContentValues();
                     v.put(CatChatContentProvider.MESSAGE_PARSE_ID, m.getObjectId());
@@ -214,6 +213,8 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         super.onPrepareOptionsMenu(menu);
 
         menu.findItem(R.id.action_add).setVisible(currentUserHasVerifiedTheirEmailAddress());
+        menu.findItem(R.id.invite).setVisible(buildInviteFriendsDialog().canPresent());
+
         return true;
     }
 
@@ -223,12 +224,30 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
         if (id == R.id.action_add) {
             startNewMessage();
             return true;
+        } else if(id == R.id.invite) {
+            FacebookDialog.MessageDialogBuilder builder = buildInviteFriendsDialog();
+
+            // If the Messaging Facebook app is installed and we can present the share dialog
+            if (builder.canPresent()) {
+                FacebookDialog dialog = builder.build();
+                dialog.present();
+                return true;
+            }
         } else if (id == R.id.logout) {
             ParseUser.logOut();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private FacebookDialog.MessageDialogBuilder buildInviteFriendsDialog() {
+        return new FacebookDialog.MessageDialogBuilder(this)
+                        .setLink("http://bit.ly/1pvDw8d")
+                        .setName(getString(R.string.fb_msg_name))
+                        .setCaption(getString(R.string.fb_msg_caption))
+                        .setDescription(getString(R.string.fb_msg_description))
+                        .setPicture("http://bit.ly/RPsDPY");
     }
 
     private void startNewMessage() {

@@ -2,6 +2,8 @@ package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 
 import com.catchat.app.Contact;
 import com.catchat.app.R;
+import com.catchat.app.Utils;
+import com.facebook.Session;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -40,7 +44,6 @@ import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,8 +52,8 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
     private static final int PICK_FB_CONTACT = 3;
 
     private String mImageId;
+    private Dialog mProgressDialog;
     private ImageView mImageView;
-
     private EditText mTopEditText;
     private EditText mBottomEditText;
 
@@ -206,7 +209,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
                     .setItems(R.array.facebook_or_contacts, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
-                                ensureUserLoggedInToFacebookThenSendMessage();
+                                ensureUserIsLoggedInToFacebookAndPresentFriendPicker();
                             } else if (which == 1) {
                                 getEmailAddressFromContacts();
                             }
@@ -222,24 +225,32 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
         return super.onOptionsItemSelected(item);
     }
 
-    private void ensureUserLoggedInToFacebookThenSendMessage() {
-        if (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-            List<String> permissions = Arrays.asList(ParseFacebookUtils.Permissions.User.EMAIL, "user_friends");
-            ParseFacebookUtils.link(ParseUser.getCurrentUser(), permissions, this, new SaveCallback() {
-                @Override
-                public void done(ParseException ex) {
-                    if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                        sendMessageViaFacebook();
+    private void ensureUserIsLoggedInToFacebookAndPresentFriendPicker() {
+        Session fbSession = Session.getActiveSession();
+        if (fbSession == null || !fbSession.isOpened()) {
+            if(ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+                presentFriendPicker();
+            } else {
+                mProgressDialog = ProgressDialog.show(SendCatMessageActivity.this, "", getString(R.string.logging_in), true);
+                final List<String> permissions = Utils.getFBPermissions();
+
+                ParseFacebookUtils.link(ParseUser.getCurrentUser(), permissions, SendCatMessageActivity.this, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        SendCatMessageActivity.this.mProgressDialog.dismiss();
+
+                        presentFriendPicker();
                     }
-                }
-            });
+                });
+            }
         } else {
-            sendMessageViaFacebook();
+            presentFriendPicker();
         }
     }
 
-
-    private void sendMessageViaFacebook() {
+    private void presentFriendPicker() {
+        // show the friend picker which will only show friends who already use CatChat
+        // http://stackoverflow.com/questions/23417356/facebook-graph-api-v2-0-me-friends-returns-empty-or-only-friends-who-also-use-m
         startActivityForResult(new Intent(SendCatMessageActivity.this, FacebookFriendPicker.class), PICK_FB_CONTACT);
     }
 

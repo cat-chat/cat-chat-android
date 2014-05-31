@@ -18,7 +18,6 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -75,7 +74,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void onLoginButtonClicked() {
         mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.logging_in), true);
 
-        List<String> permissions = Arrays.asList(ParseFacebookUtils.Permissions.User.EMAIL, "user_friends");
+        List<String> permissions = Utils.getFBPermissions();
         ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
