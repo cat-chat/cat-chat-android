@@ -238,10 +238,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
 
     private void ensureUserIsLoggedInToFacebookAndPresentFriendPicker() {
         Session fbSession = Session.getActiveSession();
-        if (fbSession == null || !fbSession.isOpened()) {
-            if(ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                presentFriendPicker();
-            } else {
+        if (fbSession == null || !fbSession.isOpened() || !ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
                 mProgressDialog = ProgressDialog.show(SendCatMessageActivity.this, "", getString(R.string.logging_in), true);
                 final List<String> permissions = Utils.getFBPermissions();
 
@@ -253,7 +250,6 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
                         presentFriendPicker();
                     }
                 });
-            }
         } else {
             presentFriendPicker();
         }
