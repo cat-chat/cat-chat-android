@@ -2,6 +2,7 @@
 <resources>
     <string-array name="facebook_or_contacts">
         <item>Facebook friend</item>
+        <item>Enter email address</item>
         <item>Email address from Contacts</item>
     </string-array>
 </resources>

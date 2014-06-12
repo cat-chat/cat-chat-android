@@ -32,5 +32,9 @@
     <string name="fb_msg_caption">Send messages via the medium of cute cats!</string>
     <string name="fb_msg_description">Create and share messages via the medium of cats!</string>
     <string name="invite">Invite FB Friends</string>
+    <string name="cancel">Cancel</string>
+    <string name="please_enter_email_of_someone_youd_like_to_message">Please enter the email address of the person to message</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="invalid_email_addess">Invalid email address</string>
 
 </resources>

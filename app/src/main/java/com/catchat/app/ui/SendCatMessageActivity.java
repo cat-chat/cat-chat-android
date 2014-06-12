@@ -15,6 +15,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -53,6 +54,8 @@ import java.util.List;
 public class SendCatMessageActivity extends Activity implements View.OnTouchListener {
     private static final int CONTACT_PICKER_RESULT = 2;
     private static final int PICK_FB_CONTACT = 3;
+
+    public static final String TO_EMAIL_FIELD = "toEmail";
 
     private String mImageId;
     private Dialog mProgressDialog;
@@ -222,11 +225,11 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
                             if (which == 0) {
                                 ensureUserIsLoggedInToFacebookAndPresentFriendPicker();
                             } else if (which == 1) {
+                                showEnterEmailAddressDialog();
+                            } else if (which == 2) {
                                 getEmailAddressFromContacts();
                             }
                         }
-
-
                     })
                     .create()
                     .show();
@@ -234,6 +237,34 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showEnterEmailAddressDialog() {
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+        new AlertDialog.Builder(this)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String email = input.getText().toString().trim();
+                        if(isValidEmail(email)) {
+                            sendMessage(TO_EMAIL_FIELD, email);
+                        } else {
+                            Toast.makeText(SendCatMessageActivity.this, R.string.invalid_email_addess, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setTitle(R.string.enter_email)
+                .setMessage(R.string.please_enter_email_of_someone_youd_like_to_message)
+                .setView(input)
+                .create()
+                .show();
+    }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
     private void ensureUserIsLoggedInToFacebookAndPresentFriendPicker() {
