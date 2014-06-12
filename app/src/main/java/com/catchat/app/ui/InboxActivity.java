@@ -176,7 +176,7 @@ public class InboxActivity extends Activity implements LoaderManager.LoaderCallb
                                 String email = user.getInnerJSONObject().get("email").toString();
 
                                 ParseUser.getCurrentUser().setEmail(email);
-                                ParseUser.getCurrentUser().saveEventually();
+                                ParseUser.getCurrentUser().saveInBackground();
                             } catch (JSONException e) {
                                 Log.e("CatChatInbox", "Failed to parse JSON from FB", e);
                             }
