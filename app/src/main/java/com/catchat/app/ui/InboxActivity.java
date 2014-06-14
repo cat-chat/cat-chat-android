@@ -1,6 +1,5 @@
 package com.catchat.app.ui;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -27,6 +26,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
+import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class InboxActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+public class InboxActivity extends AccentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
     private static final int IMAGE_PICKER = 1;
 

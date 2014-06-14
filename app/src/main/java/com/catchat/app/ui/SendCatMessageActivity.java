@@ -1,7 +1,5 @@
 package com.catchat.app.ui;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -33,6 +31,8 @@ import com.catchat.app.Contact;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
 import com.facebook.Session;
+import com.negusoft.holoaccent.activity.AccentActivity;
+import com.negusoft.holoaccent.dialog.AccentAlertDialog;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
@@ -51,7 +51,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class SendCatMessageActivity extends Activity implements View.OnTouchListener {
+public class SendCatMessageActivity extends AccentActivity implements View.OnTouchListener {
     private static final int CONTACT_PICKER_RESULT = 2;
     private static final int PICK_FB_CONTACT = 3;
 
@@ -218,7 +218,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.send) {
-            new AlertDialog.Builder(this)
+            new AccentAlertDialog.Builder(this)
                     .setTitle(getString(R.string.send_to))
                     .setItems(R.array.facebook_or_contacts, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -243,7 +243,7 @@ public class SendCatMessageActivity extends Activity implements View.OnTouchList
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
-        new AlertDialog.Builder(this)
+        new AccentAlertDialog.Builder(this)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     @Override

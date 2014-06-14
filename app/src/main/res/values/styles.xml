@@ -1,7 +1,7 @@
 <resources>
 
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:editTextBackground">@drawable/turquoise_edittext_selector</item>
+    <style name="AppTheme" parent="Theme.HoloAccent.Light.DarkActionBar">
+        <item name="accentColor">@color/turquoise</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="android:icon">@drawable/white_logo</item>
         <item name="android:actionBarWidgetTheme">@style/AppTheme.OverflowMenu</item>
