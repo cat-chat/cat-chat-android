@@ -8,10 +8,23 @@ android {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
-        versionName "1.0"
+        versionName "0.1"
     }
+
+    signingConfigs {
+        release {
+            if(System.console() != null) {
+                storeFile file(System.console().readLine("\n\$ Enter keystore path: ").trim())
+                storePassword System.console().readLine("\n\$ Enter keystore password: ").trim()
+                keyAlias System.console().readLine("\n\$ Enter key alias: ").trim()
+                keyPassword System.console().readLine("\n\$ Enter key password: ").trim()
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
