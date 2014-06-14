@@ -1,6 +1,8 @@
 package com.catchat.app.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,6 +31,7 @@ import java.util.List;
 public class CatImagePickerActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private GridView mGridView;
+    private Dialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +45,47 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
         mGridView.setAdapter(new CatAdapter(this));
         mGridView.setOnItemClickListener(this);
 
-        pullAndCacheLatestCatPics();
+        mProgressDialog = ProgressDialog.show(CatImagePickerActivity.this, "", getString(R.string.retrieving_cat_pics), true);
+
+        pullLatestCatPicsFromCache();
     }
 
-    private void pullAndCacheLatestCatPics() {
+    private void pullLatestCatPicsFromCache() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
         query.fromLocalDatastore();
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> catImages, ParseException e) {
-                if (e == null && catImages != null) {
-                    CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
-                    adapter.setItems(catImages);
-                    adapter.notifyDataSetChanged();
+                if (e == null) {
+                    if(catImages == null || catImages.size() <= 0) {
+                        pullAndCacheLatestCatPics();
+                    } else {
+                        updateAdapter(catImages);
+                    }
                 } else {
                     Log.e("CatChatTag", "Error pulling cat pics: " + e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    private void updateAdapter(List<ParseObject> catImages) {
+        CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
+        adapter.setItems(catImages);
+        adapter.notifyDataSetChanged();
+
+        mProgressDialog.dismiss();
+    }
+
+    private void pullAndCacheLatestCatPics() {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> catImages, ParseException e) {
+                if (e == null && catImages != null) {
+                    updateAdapter(catImages);
+
+                    ParseObject.pinAllInBackground(catImages);
+                } else {
+                    mProgressDialog.dismiss();
                 }
             }
         });

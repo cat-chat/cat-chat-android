@@ -36,5 +36,6 @@
     <string name="please_enter_email_of_someone_youd_like_to_message">Please enter the email address of the person to message</string>
     <string name="enter_email">Enter Email</string>
     <string name="invalid_email_addess">Invalid email address</string>
+    <string name="retrieving_cat_pics">Retrieving Cat Pictures...</string>
 
 </resources>
