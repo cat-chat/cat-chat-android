@@ -10,6 +10,12 @@
         android:showAsAction="always" />
 
     <item
+        android:id="@+id/sent_messages"
+        android:title="@string/sent_messages"
+        android:orderInCategory="200"
+        android:showAsAction="never" />
+
+    <item
         android:id="@+id/invite"
         android:title="@string/invite"
         android:orderInCategory="200"

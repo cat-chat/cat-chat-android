@@ -37,5 +37,6 @@
     <string name="enter_email">Enter Email</string>
     <string name="invalid_email_addess">Invalid email address</string>
     <string name="retrieving_cat_pics">Retrieving Cat Pictures...</string>
+    <string name="sent_messages">Sent Messages</string>
 
 </resources>

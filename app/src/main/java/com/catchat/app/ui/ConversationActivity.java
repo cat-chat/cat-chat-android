@@ -35,6 +35,7 @@ import java.util.List;
 public class ConversationActivity extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private String mUserId;
+    private boolean mShowSentMessages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,26 +44,40 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
         setContentView(R.layout.activity_conversation);
 
         Bundle extras = getIntent().getExtras();
-        mUserId = extras.getString("fromUserId");
-        String userEmail = extras.getString("fromUserEmail");
 
-        getActionBar().setTitle(userEmail);
+        mShowSentMessages = extras.getBoolean("sentMessages", false);
+
+        if(mShowSentMessages) {
+            getActionBar().setTitle(R.string.sent_messages);
+        } else {
+            mUserId = extras.getString("fromUserId");
+            String userEmail = extras.getString("fromUserEmail");
+
+            getActionBar().setTitle(userEmail);
+        }
+
 
         final ListAdapter adapter = new ConversationAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
         getListView().setAdapter(adapter);
-
         getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        if(mShowSentMessages) {
+            return new CursorLoader(this,
+                    CatChatContentProvider.SENT_MESSAGES,
+                    new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID},
+                    null,
+                    null,
+                    CatChatContentProvider.MESSAGE_SENT_TIME);
+        }
         return new CursorLoader(this,
                 CatChatContentProvider.MESSAGES_TABLE_MESSAGES,
                 new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID},
                 CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID + "=?",
                 new String[]{mUserId},
-                CatChatContentProvider.ID);
+                CatChatContentProvider.MESSAGE_SENT_TIME);
     }
 
     @Override

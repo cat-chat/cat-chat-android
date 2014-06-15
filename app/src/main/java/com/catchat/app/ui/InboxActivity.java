@@ -219,6 +219,10 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
                 dialog.present();
                 return true;
             }
+        } else if (id == R.id.sent_messages) {
+            Intent intent = new Intent(this, ConversationActivity.class);
+            intent.putExtra("sentMessages", true);
+            startActivity(intent);
         } else if (id == R.id.logout) {
             ParseUser.logOut();
             startActivity(new Intent(this, MainActivity.class));
@@ -229,7 +233,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
     private FacebookDialog.MessageDialogBuilder buildInviteFriendsDialog() {
         return new FacebookDialog.MessageDialogBuilder(this)
-                        .setLink("http://bit.ly/1pvDw8d")
+                        .setLink("www.catchatapp.com")
                         .setName(getString(R.string.fb_msg_name))
                         .setCaption(getString(R.string.fb_msg_caption))
                         .setDescription(getString(R.string.fb_msg_description))
