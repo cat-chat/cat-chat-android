@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.R;
+import com.catchat.app.Utils;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -67,14 +68,14 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
         if(mShowSentMessages) {
             return new CursorLoader(this,
                     CatChatContentProvider.SENT_MESSAGES,
-                    new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID},
+                    new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID, CatChatContentProvider.MESSAGE_SENT_TIME},
                     null,
                     null,
                     CatChatContentProvider.MESSAGE_SENT_TIME);
         }
         return new CursorLoader(this,
                 CatChatContentProvider.MESSAGES_TABLE_MESSAGES,
-                new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID},
+                new String[]{CatChatContentProvider.MESSAGE_CONTENTS, CatChatContentProvider.ID, CatChatContentProvider.MESSAGE_IMAGE_ID, CatChatContentProvider.MESSAGE_SENT_TIME},
                 CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID + "=?",
                 new String[]{mUserId},
                 CatChatContentProvider.MESSAGE_SENT_TIME);
@@ -108,9 +109,17 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
         public void bindView(View view, Context context, Cursor cursor) {
             String imageId = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_IMAGE_ID));
             String contents = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_CONTENTS));
+            String sentTime = cursor.getString(cursor.getColumnIndex(CatChatContentProvider.MESSAGE_SENT_TIME));
 
             setCatImage(view, imageId);
             setTopAndBottomCaptions(view, contents);
+            setTimestamp(view, sentTime);
+        }
+
+        private void setTimestamp(View view, String sentTime) {
+            TextView textView = (TextView)view.findViewById(R.id.timestamp_textview);
+
+            textView.setText(Utils.getDisplayDate(sentTime));
         }
 
         private void setTopAndBottomCaptions(View view, String contents) {
