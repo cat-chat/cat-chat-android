@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,33 +21,28 @@ import android.widget.Toast;
 import com.catchat.app.CatChatContentProvider;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.FindCallback;
 import com.parse.FunctionCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.RefreshCallback;
 
-import org.json.JSONException;
-
 import java.util.HashMap;
 import java.util.List;
 
 
-public class InboxActivity extends AccentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+public class InboxActivity extends AccentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener, View.OnClickListener {
 
     private static final int IMAGE_PICKER = 1;
 
     private ListView mListView;
     private View mEmptyViews;
+    private View mResendVerificationEmailButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +50,8 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
         setContentView(R.layout.activity_inbox);
 
-        if (ParseFacebookUtils.isLinked(ParseUser.getCurrentUser()) && currentUserHasNoEmailAddress()) {
-            retrieveEmailAddress();
-        }
+        mResendVerificationEmailButton = findViewById(R.id.resend_verification_email);
+        mResendVerificationEmailButton.setOnClickListener(this);
 
         mEmptyViews = findViewById(R.id.empty_layout);
         mListView = (ListView) findViewById(R.id.listview);
@@ -67,6 +60,8 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
         if (!currentUserHasVerifiedTheirEmailAddress()) {
             showEmailNotVerifiedWarning();
         } else {
+            mResendVerificationEmailButton.setVisibility(View.GONE);
+
             initialiseMessagesAdapter();
         }
     }
@@ -106,7 +101,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
         ParseUser.getCurrentUser().refreshInBackground(new RefreshCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
-                if(e == null) {
+                if (e == null) {
                     refresh();
                 }
             }
@@ -115,6 +110,8 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
     private void refresh() {
         if (currentUserHasVerifiedTheirEmailAddress()) {
+            mResendVerificationEmailButton.setVisibility(View.GONE);
+
             showNoMessagesInformation();
 
             if (mListView.getAdapter() == null) {
@@ -153,39 +150,12 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
                     Uri uri = getContentResolver().insert(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, v);
 
-                    if(uri.equals(Uri.withAppendedPath(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, Long.toString(1)))) {
+                    if (uri.equals(Uri.withAppendedPath(CatChatContentProvider.MESSAGES_TABLE_GROUP_BY_FROM_USER_ID_URI, Long.toString(1)))) {
                         m.deleteEventually();
                     }
                 }
             }
         });
-    }
-
-    private boolean currentUserHasNoEmailAddress() {
-        return TextUtils.isEmpty(ParseUser.getCurrentUser().getEmail());
-    }
-
-    private void retrieveEmailAddress() {
-        Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
-                new Request.GraphUserCallback() {
-                    @Override
-                    public void onCompleted(GraphUser user, Response response) {
-                        if (user != null) {
-
-                            try {
-                                String email = user.getInnerJSONObject().get("email").toString();
-
-                                ParseUser.getCurrentUser().setEmail(email);
-                                ParseUser.getCurrentUser().saveInBackground();
-                            } catch (JSONException e) {
-                                Log.e("CatChatInbox", "Failed to parse JSON from FB", e);
-                            }
-
-                        }
-                    }
-                }
-        );
-        request.executeAsync();
     }
 
     @Override
@@ -210,7 +180,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
         if (id == R.id.action_add) {
             startNewMessage();
             return true;
-        } else if(id == R.id.invite) {
+        } else if (id == R.id.invite) {
             FacebookDialog.MessageDialogBuilder builder = buildInviteFriendsDialog();
 
             // If the Messaging Facebook app is installed and we can present the share dialog
@@ -225,6 +195,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
             startActivity(intent);
         } else if (id == R.id.logout) {
             ParseUser.logOut();
+            ParseObject.unpinAllInBackground();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
@@ -233,11 +204,11 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
     private FacebookDialog.MessageDialogBuilder buildInviteFriendsDialog() {
         return new FacebookDialog.MessageDialogBuilder(this)
-                        .setLink("www.catchatapp.com")
-                        .setName(getString(R.string.fb_msg_name))
-                        .setCaption(getString(R.string.fb_msg_caption))
-                        .setDescription(getString(R.string.fb_msg_description))
-                        .setPicture("http://bit.ly/RPsDPY");
+                .setLink("www.catchatapp.com")
+                .setName(getString(R.string.fb_msg_name))
+                .setCaption(getString(R.string.fb_msg_caption))
+                .setDescription(getString(R.string.fb_msg_description))
+                .setPicture("http://bit.ly/RPsDPY");
     }
 
     private void startNewMessage() {
@@ -272,7 +243,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
         Log.d("CatChatTag", "InboxActivity, found: " + c.getCount());
         getAdapter().swapCursor(c);
 
-        if(c != null && c.getCount() > 0) {
+        if (c != null && c.getCount() > 0) {
             mListView.setVisibility(View.VISIBLE);
             mEmptyViews.setVisibility(View.GONE);
         }
@@ -285,15 +256,18 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (currentUserHasVerifiedTheirEmailAddress()) {
-            Cursor c = (Cursor) adapterView.getAdapter().getItem(i);
+        Cursor c = (Cursor) adapterView.getAdapter().getItem(i);
 
-            Intent intent = new Intent(this, ConversationActivity.class);
-            intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
-            intent.putExtra("fromUserEmail", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL)));
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra("fromUserId", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_PARSE_ID)));
+        intent.putExtra("fromUserEmail", c.getString(c.getColumnIndex(CatChatContentProvider.MESSAGE_FROM_USER_EMAIL)));
 
-            startActivity(intent);
-        } else {
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.resend_verification_email) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("userid", ParseUser.getCurrentUser().getObjectId());
 
@@ -303,7 +277,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
                     if (e == null) {
                         Toast.makeText(InboxActivity.this, getString(R.string.email_verification_sent), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(InboxActivity.this, getString(R.string.failed_to_send_email_verification) + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InboxActivity.this, getString(R.string.failed_to_send_email_verification) + " " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });

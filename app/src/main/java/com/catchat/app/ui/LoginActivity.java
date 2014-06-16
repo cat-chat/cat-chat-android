@@ -1,6 +1,5 @@
 package com.catchat.app.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,12 +14,13 @@ import android.widget.Toast;
 
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
 
-public class LoginActivity extends Activity implements View.OnClickListener, TextWatcher {
+public class LoginActivity extends AccentActivity implements View.OnClickListener, TextWatcher {
 
     private Button mForgotPassword;
     private Button mLoginButton;

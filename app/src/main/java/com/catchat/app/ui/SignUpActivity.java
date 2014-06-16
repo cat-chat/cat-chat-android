@@ -1,6 +1,5 @@
 package com.catchat.app.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,12 +13,13 @@ import android.widget.EditText;
 
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 
-public class SignUpActivity extends Activity implements View.OnClickListener, TextWatcher {
+public class SignUpActivity extends AccentActivity implements View.OnClickListener, TextWatcher {
 
     private Button mSignUpButton;
     private Dialog mProgressDialog;

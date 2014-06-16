@@ -23,7 +23,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="password_reset_email_sent">Password reset email successfully sent</string>
     <string name="please_verify_email">Verify your email address</string>
-    <string name="please_verify_email_message">You will not be able to send/receive messages on CatChat without verifying your email address. Tap here to resend verification email.</string>
+    <string name="please_verify_email_message">You will not be able to send/receive messages on CatChat without verifying your email address.</string>
     <string name="failed_to_send_email_verification">Failed to resend email verification. </string>
     <string name="email_verification_sent">Email verification email sent.</string>
     <string name="no_messages">No messages!</string>
@@ -38,5 +38,6 @@
     <string name="invalid_email_addess">Invalid email address</string>
     <string name="retrieving_cat_pics">Retrieving Cat Pictures...</string>
     <string name="sent_messages">Sent Messages</string>
+    <string name="resend_verification_email">Resend verification email</string>
 
 </resources>

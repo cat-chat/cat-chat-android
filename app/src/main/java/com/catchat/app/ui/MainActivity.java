@@ -5,17 +5,18 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.catchat.app.CatChatApplication;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -35,7 +36,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         ParseAnalytics.trackAppOpened(getIntent());
-        ParseInstallation.getCurrentInstallation().saveInBackground();
 
         mFacebookButton = (Button) findViewById(R.id.facebook);
         mFacebookButton.setOnClickListener(this);
@@ -47,7 +47,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         mLoginButton.setOnClickListener(this);
 
         if (ParseUser.getCurrentUser() != null) {
-            Utils.mapInstallationToCurrentUser();
             showInboxActivity();
             finish();
         }
@@ -82,11 +81,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if (user == null) {
                     Log.d("CatChatLogin", "User cancelled Facebook login");
                 } else {
+                    if(currentUserHasNoEmailAddress()) {
+                        ((CatChatApplication)getApplication()).retrieveEmailAddress();
+                    }
+
                     Utils.mapInstallationToCurrentUser();
                     showInboxActivity();
                 }
             }
         });
+    }
+
+    private boolean currentUserHasNoEmailAddress() {
+        return TextUtils.isEmpty(ParseUser.getCurrentUser().getEmail());
     }
 
     private void showInboxActivity() {
