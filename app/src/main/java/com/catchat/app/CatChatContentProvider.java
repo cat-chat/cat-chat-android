@@ -78,20 +78,25 @@ public class CatChatContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-
         long insertedId = -1;
+        boolean messageAlreadyInsertedException = false;
         try {
             SQLiteDatabase db = mCatChatDatabase.getWritableDatabase();
-            insertedId = db.insert(getType(uri), null, values);
+            insertedId = db.insertOrThrow(getType(uri), null, values);
         } catch (Exception e) {
-            Log.e("CatChatProvider", "Exception whilst inserting", e);
+            if(e.getMessage().contains("column " + MESSAGE_PARSE_ID + " is not unique")) {
+                messageAlreadyInsertedException = true;
+            } else {
+                Log.e("CatChatProvider", "Exception whilst inserting", e);
+            }
         }
 
-        if (-1 != insertedId) {
+        // return success if inserted or its already there
+        if (-1 != insertedId || messageAlreadyInsertedException) {
             getContext().getContentResolver().notifyChange(uri, null);
             return Uri.withAppendedPath(uri, Long.toString(1));
         } else {
-            Log.e("CatChatProvider", "Failed to insert a Message");
+            Log.d("CatChatProvider", "Failed to insert a Message");
             return uri;
         }
     }
