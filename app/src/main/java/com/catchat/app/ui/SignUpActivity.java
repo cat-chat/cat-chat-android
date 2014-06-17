@@ -61,7 +61,7 @@ public class SignUpActivity extends AccentActivity implements View.OnClickListen
         String emailAddress = getEmailAddress();
         String password = getPassword();
 
-        mProgressDialog = ProgressDialog.show(SignUpActivity.this, "", getString(R.string.signing_up), true);
+        mProgressDialog = CatProgressDialog.show(SignUpActivity.this, getString(R.string.signing_up));
 
         ParseUser user = new ParseUser();
         user.setUsername(emailAddress);

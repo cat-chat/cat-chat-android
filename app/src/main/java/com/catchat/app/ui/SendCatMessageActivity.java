@@ -1,7 +1,6 @@
 package com.catchat.app.ui;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -270,7 +269,7 @@ public class SendCatMessageActivity extends AccentActivity implements View.OnTou
     private void ensureUserIsLoggedInToFacebookAndPresentFriendPicker() {
         Session fbSession = Session.getActiveSession();
         if (fbSession == null || !fbSession.isOpened() || !ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
-                mProgressDialog = ProgressDialog.show(SendCatMessageActivity.this, "", getString(R.string.logging_in), true);
+                mProgressDialog = CatProgressDialog.show(SendCatMessageActivity.this, getString(R.string.logging_in));
                 final List<String> permissions = Utils.getFBPermissions();
 
                 ParseFacebookUtils.link(ParseUser.getCurrentUser(), permissions, SendCatMessageActivity.this, new SaveCallback() {

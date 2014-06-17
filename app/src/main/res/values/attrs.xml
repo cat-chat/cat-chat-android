@@ -6,4 +6,11 @@
         <attr name="floatLabelSidePadding" format="reference|dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SvgPathView">
+        <attr name="strokeWidth" format="float" />
+        <attr name="strokeColor" format="color|reference" />
+        <attr name="phase" format="float" />
+        <attr name="duration" format="integer" />
+    </declare-styleable>
+
 </resources>

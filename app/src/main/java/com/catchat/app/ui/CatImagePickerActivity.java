@@ -2,7 +2,6 @@ package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,7 +44,7 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
         mGridView.setAdapter(new CatAdapter(this));
         mGridView.setOnItemClickListener(this);
 
-        mProgressDialog = ProgressDialog.show(CatImagePickerActivity.this, "", getString(R.string.retrieving_cat_pics), true);
+        mProgressDialog = CatProgressDialog.show(CatImagePickerActivity.this, getString(R.string.retrieving_cat_pics));
 
         pullLatestCatPicsFromCache();
     }

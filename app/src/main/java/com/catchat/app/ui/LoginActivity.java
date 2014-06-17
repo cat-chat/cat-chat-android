@@ -1,7 +1,6 @@
 package com.catchat.app.ui;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -98,7 +97,7 @@ public class LoginActivity extends AccentActivity implements View.OnClickListene
         String emailAddress = getEmailAddress();
         String password = getPassword();
 
-        mProgressDialog = ProgressDialog.show(LoginActivity.this, "", getString(R.string.logging_in), true);
+        mProgressDialog = CatProgressDialog.show(LoginActivity.this, getString(R.string.logging_in));
 
         ParseUser.logInInBackground(emailAddress, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {

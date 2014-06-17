@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="@dimen/activity_vertical_margin"
+    android:background="@drawable/white_background">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/message_textview"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:textColor="@color/turquoise"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="loading something something"/>
+
+    <com.catchat.app.ui.SvgPathView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:id="@+id/pathview"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:phase="1.0"
+        app:duration="1000"
+        app:strokeWidth="5"
+        app:strokeColor="@color/turquoise" />
+</LinearLayout>

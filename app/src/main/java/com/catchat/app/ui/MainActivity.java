@@ -2,7 +2,6 @@ package com.catchat.app.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -71,7 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void onLoginButtonClicked() {
-        mProgressDialog = ProgressDialog.show(MainActivity.this, "", getString(R.string.logging_in), true);
+        mProgressDialog = CatProgressDialog.show(MainActivity.this, getString(R.string.logging_in));
 
         List<String> permissions = Utils.getFBPermissions();
         ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
