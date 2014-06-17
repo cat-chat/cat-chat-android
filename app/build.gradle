@@ -2,18 +2,16 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1.0'
-
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 19
+        minSdkVersion ANDROID_BUILD_MIN_SDK_VERSION
+        targetSdkVersion ANDROID_BUILD_SDK_VERSION
         versionCode 2
-        versionName "0.1.2"
+        versionName '0.1.2'
     }
-
     signingConfigs {
         release {
-            if(System.console() != null) {
+            if (System.console() != null) {
                 storeFile file(System.console().readLine("\n\$ Enter keystore path: ").trim())
                 storePassword System.console().readLine("\n\$ Enter keystore password: ").trim()
                 keyAlias System.console().readLine("\n\$ Enter key alias: ").trim()
@@ -21,7 +19,6 @@ android {
             }
         }
     }
-
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -29,12 +26,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':facebook')
     compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.google.android.gms:play-services:4.2.42'
     compile 'com.negusoft.holoaccent:library:1.0'
+    compile project(':facebook')
 }
