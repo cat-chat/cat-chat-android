@@ -42,7 +42,7 @@ public class CatProgressDialog extends ProgressDialog {
         textView.setText(mMessageText);
 
         mAnimatingPathView = (SvgPathView)findViewById(R.id.pathview);
-        mAnimatingPathView.setSvgResource(R.raw.logo);
+        mAnimatingPathView.setSvgResource(R.raw.catchat_large_bg_outline);
     }
 
     @Override

@@ -18,9 +18,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.catchat.app.data.CatChatContentProvider;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.data.CatChatContentProvider;
 import com.catchat.app.ui.auth.MainActivity;
 import com.catchat.app.ui.sendingmessage.CatImagePickerActivity;
 import com.catchat.app.ui.sendingmessage.SendCatMessageActivity;
@@ -67,6 +67,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
             initialiseMessagesAdapter();
         }
+//        CatProgressDialog.show(this, getString(R.string.retrieving_cat_pics));
     }
 
     private void showEmailNotVerifiedWarning() {
