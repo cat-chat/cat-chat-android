@@ -20,7 +20,7 @@ public class Utils {
 
     public static void mapInstallationToCurrentUser() {
         ParseInstallation.getCurrentInstallation().put("user", ParseUser.getCurrentUser());
-        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseInstallation.getCurrentInstallation().saveEventually();
     }
 
     public static List<String> getFBPermissions() {

@@ -139,7 +139,7 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
 
             // TODO: request elsewhere
             ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-            query.fromLocalDatastore();
+            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ONLY);
             query.whereEqualTo("objectId", imageId);
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override

@@ -53,16 +53,17 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
     private void pullLatestCatPicsFromCache() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-        query.fromLocalDatastore();
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> catImages, ParseException e) {
                 if (e == null) {
                     if(catImages == null || catImages.size() <= 0) {
-                        pullAndCacheLatestCatPics();
+                        mProgressDialog.dismiss();
                     } else {
                         updateAdapter(catImages);
                     }
                 } else {
+                    mProgressDialog.dismiss();
                     Log.e("CatChatTag", "Error pulling cat pics: " + e.getMessage(), e);
                 }
             }
@@ -72,21 +73,6 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
     private void updateAdapter(List<ParseObject> catImages) {
         CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
         new DecodeBitmapsAsyncTask(adapter, catImages, this).execute();
-    }
-
-    private void pullAndCacheLatestCatPics() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> catImages, ParseException e) {
-                if (e == null && catImages != null) {
-                    updateAdapter(catImages);
-
-                    ParseObject.pinAllInBackground(catImages);
-                } else {
-                    mProgressDialog.dismiss();
-                }
-            }
-        });
     }
 
     @Override

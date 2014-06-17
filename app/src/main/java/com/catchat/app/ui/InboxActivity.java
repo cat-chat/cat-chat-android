@@ -198,7 +198,7 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
             startActivity(intent);
         } else if (id == R.id.logout) {
             ParseUser.logOut();
-            ParseObject.unpinAllInBackground();
+            ParseQuery.clearAllCachedResults();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }

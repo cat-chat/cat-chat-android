@@ -84,7 +84,7 @@ public class SendCatMessageActivity extends AccentActivity implements View.OnTou
         mImageId = extras.getString("imageid");
 
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-        query.fromLocalDatastore();
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("objectId", mImageId);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

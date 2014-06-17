@@ -19,10 +19,9 @@ public class CatChatApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Parse.enableLocalDatastore(this);
-        PushService.setDefaultPushCallback(this, InboxActivity.class);
-
         Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
+
+        PushService.setDefaultPushCallback(this, InboxActivity.class);
         ParseFacebookUtils.initialize(getString(R.string.fb_app_id));
     }
 
@@ -36,7 +35,7 @@ public class CatChatApplication extends Application {
                                 String email = user.getInnerJSONObject().get("email").toString();
 
                                 ParseUser.getCurrentUser().setEmail(email);
-                                ParseUser.getCurrentUser().saveInBackground();
+                                ParseUser.getCurrentUser().saveEventually();
                             } catch (JSONException e) {
                                 Log.e("CatChatInbox", "Failed to parse JSON from FB", e);
                             }
