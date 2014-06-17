@@ -11,6 +11,7 @@ import android.graphics.PathEffect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.catchat.app.R;
 
@@ -131,6 +132,7 @@ public class SvgPathView extends View {
             mSvgAnimator = ObjectAnimator.ofFloat(this, "phase", mPhase, 0.0f);
             mSvgAnimator.setRepeatCount(ValueAnimator.INFINITE);
             mSvgAnimator.setDuration(mDuration);
+            mSvgAnimator.setInterpolator(new LinearInterpolator());
             mSvgAnimator.start();
         }
     }
