@@ -53,6 +53,9 @@ public class SvgPathView extends View {
         } finally {
             if (a != null) a.recycle();
         }
+
+        // an optimisation, stops flickering: hat tip https://github.com/romainguy/road-trip
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     private void updatePathsPhaseLocked() {
