@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CatImagePickerActivity extends Activity implements AdapterView.OnItemClickListener {
+public class CatImagePickerActivity extends Activity implements AdapterView.OnItemClickListener, OnCatImageDecodingComplete {
 
     private GridView mGridView;
     private Dialog mProgressDialog;
@@ -69,10 +70,7 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
     private void updateAdapter(List<ParseObject> catImages) {
         CatAdapter adapter = (CatAdapter) mGridView.getAdapter();
-        adapter.setItems(catImages);
-        adapter.notifyDataSetChanged();
-
-        mProgressDialog.dismiss();
+        new DecodeBitmapsAsyncTask(adapter, catImages, this).execute();
     }
 
     private void pullAndCacheLatestCatPics() {
@@ -100,6 +98,11 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
         finish();
     }
 
+    @Override
+    public void onDecodingComplete() {
+        mProgressDialog.dismiss();
+    }
+
     private class CatImage
     {
         public String objectId;
@@ -108,30 +111,10 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
     private class CatAdapter extends BaseAdapter {
         private final LayoutInflater mViewInflater;
-
         private final List<CatImage> mImages = new ArrayList<CatImage>();
 
         public CatAdapter(Context c) {
             mViewInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        public void setItems(List<ParseObject> images) {
-            mImages.clear();
-
-            for(ParseObject o : images) {
-                ParseFile file = o.getParseFile("image");
-                try {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(file.getData(), 0, file.getData().length);
-
-                    CatImage c = new CatImage();
-                    c.bitmap = bmp;
-                    c.objectId = o.getObjectId();
-
-                    mImages.add(c);
-                } catch (ParseException e) {
-                    Log.d("CatChatTag", "Failed to decode bitmap: " + o, e);
-                }
-            }
         }
 
         @Override
@@ -163,6 +146,48 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
             imageview.setImageBitmap(catImage.bitmap);
             return view;
+        }
+
+        public void addImage(CatImage c) {
+            mImages.add(c);
+        }
+    }
+
+    private class DecodeBitmapsAsyncTask extends AsyncTask<Void, Void, Void> {
+        private final CatAdapter mAdapter;
+        private final List<ParseObject> mCatImages;
+        private final OnCatImageDecodingComplete mListener;
+
+        public DecodeBitmapsAsyncTask(CatAdapter adapter, List<ParseObject> catImages, OnCatImageDecodingComplete listener) {
+            mAdapter = adapter;
+            mCatImages = catImages;
+            mListener = listener;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for(ParseObject o : mCatImages) {
+                ParseFile file = o.getParseFile("image");
+                try {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(file.getData(), 0, file.getData().length);
+
+                    CatImage c = new CatImage();
+                    c.bitmap = bmp;
+                    c.objectId = o.getObjectId();
+
+                    mAdapter.addImage(c);
+                } catch (ParseException e) {
+                    Log.d("CatChatTag", "Failed to decode bitmap: " + o, e);
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mAdapter.notifyDataSetChanged();
+            mListener.onDecodingComplete();
         }
     }
 }

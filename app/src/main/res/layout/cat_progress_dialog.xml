@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         app:phase="1.0"
-        app:duration="1000"
+        app:duration="4500"
         app:strokeWidth="5"
         app:strokeColor="@color/turquoise" />
 </LinearLayout>
