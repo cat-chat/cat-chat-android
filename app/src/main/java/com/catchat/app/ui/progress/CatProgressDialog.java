@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.progress;
 
 import android.app.ProgressDialog;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.auth;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import com.catchat.app.CatChatApplication;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.ui.progress.CatProgressDialog;
+import com.catchat.app.ui.InboxActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;

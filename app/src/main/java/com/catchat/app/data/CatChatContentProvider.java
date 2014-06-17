@@ -1,4 +1,4 @@
-package com.catchat.app;
+package com.catchat.app.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -11,7 +11,7 @@ import android.net.Uri;
 import android.util.Log;
 
 public class CatChatContentProvider extends ContentProvider {
-    public static final String AUTHORITY = "com.catchat.app.CatChatContentProvider";
+    public static final String AUTHORITY = "com.catchat.app.data.CatChatContentProvider";
     public static final String SCHEME = "content";
     public static final Uri CONTENT_URI = Uri.parse(SCHEME + "://" + AUTHORITY);
 

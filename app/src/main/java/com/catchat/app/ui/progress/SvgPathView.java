@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.progress;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;

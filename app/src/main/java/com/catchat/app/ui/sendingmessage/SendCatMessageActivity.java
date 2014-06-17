@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.sendingmessage;
 
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -25,10 +25,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.catchat.app.CatChatContentProvider;
+import com.catchat.app.data.CatChatContentProvider;
 import com.catchat.app.Contact;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.ui.progress.CatProgressDialog;
 import com.facebook.Session;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.negusoft.holoaccent.dialog.AccentAlertDialog;

@@ -26,7 +26,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.catchat.app.ui.MainActivity"
+            android:name=".ui.auth.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashScreen" >
             <intent-filter>
@@ -40,26 +40,26 @@
             android:label="@string/messages"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.catchat.app.ui.LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:label="@string/log_in"
-            android:parentActivityName="com.catchat.app.ui.MainActivity" >
+            android:parentActivityName=".ui.auth.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
-            android:name="com.catchat.app.ui.SignUpActivity"
+            android:name=".ui.auth.SignUpActivity"
             android:label="@string/sign_up"
-            android:parentActivityName="com.catchat.app.ui.MainActivity" >
+            android:parentActivityName=".ui.auth.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
-            android:name="com.catchat.app.ui.CatImagePickerActivity"
+            android:name=".ui.sendingmessage.CatImagePickerActivity"
             android:label="@string/title_activity_cat_image_picker" />
         <activity
-            android:name="com.catchat.app.ui.SendCatMessageActivity"
+            android:name=".ui.sendingmessage.SendCatMessageActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
@@ -67,8 +67,8 @@
             android:label="@string/app_name" />
 
         <provider
-            android:name="com.catchat.app.CatChatContentProvider"
-            android:authorities="com.catchat.app.CatChatContentProvider"
+            android:name=".data.CatChatContentProvider"
+            android:authorities="com.catchat.app.data.CatChatContentProvider"
             android:exported="false" />
 
         <activity
@@ -100,7 +100,7 @@
         </receiver>
 
         <activity
-            android:name="com.catchat.app.ui.FacebookFriendPicker"
+            android:name=".ui.sendingmessage.FacebookFriendPicker"
             android:label="@string/title_activity_facebook_friend_picker"
             android:theme="@android:style/Theme.Dialog">
         </activity>

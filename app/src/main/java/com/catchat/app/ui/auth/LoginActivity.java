@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.auth;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.ui.progress.CatProgressDialog;
+import com.catchat.app.ui.InboxActivity;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

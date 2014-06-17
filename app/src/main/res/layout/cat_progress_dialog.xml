@@ -21,7 +21,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="loading something something"/>
 
-    <com.catchat.app.ui.SvgPathView
+    <com.catchat.app.ui.progress.SvgPathView
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:id="@+id/pathview"

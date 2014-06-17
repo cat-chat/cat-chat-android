@@ -1,7 +1,6 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.auth;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +12,8 @@ import android.widget.EditText;
 
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.ui.progress.CatProgressDialog;
+import com.catchat.app.ui.InboxActivity;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;

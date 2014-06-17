@@ -18,9 +18,12 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.catchat.app.CatChatContentProvider;
+import com.catchat.app.data.CatChatContentProvider;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
+import com.catchat.app.ui.auth.MainActivity;
+import com.catchat.app.ui.sendingmessage.CatImagePickerActivity;
+import com.catchat.app.ui.sendingmessage.SendCatMessageActivity;
 import com.facebook.widget.FacebookDialog;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.FindCallback;

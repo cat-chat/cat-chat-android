@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.auth;
 
 /*
  * Copyright (C) 2014 Chris Banes

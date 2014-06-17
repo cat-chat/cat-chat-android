@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.progress;
 
 /**
  * Copyright 2013 Romain Guy

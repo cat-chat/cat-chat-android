@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.catchat.app.ui.FloatLabelLayout
+    <com.catchat.app.ui.auth.FloatLabelLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -24,9 +24,9 @@
             android:imeOptions="actionNext"
             android:nextFocusDown="@+id/edit_password" />
 
-    </com.catchat.app.ui.FloatLabelLayout>
+    </com.catchat.app.ui.auth.FloatLabelLayout>
 
-    <com.catchat.app.ui.FloatLabelLayout
+    <com.catchat.app.ui.auth.FloatLabelLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -42,7 +42,7 @@
             android:inputType="textPassword"
             android:imeOptions="actionDone" />
 
-    </com.catchat.app.ui.FloatLabelLayout>
+    </com.catchat.app.ui.auth.FloatLabelLayout>
 
     <Button
         android:layout_width="wrap_content"

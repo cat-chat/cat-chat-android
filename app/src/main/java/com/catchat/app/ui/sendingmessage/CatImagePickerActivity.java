@@ -1,4 +1,4 @@
-package com.catchat.app.ui;
+package com.catchat.app.ui.sendingmessage;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,6 +18,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.catchat.app.R;
+import com.catchat.app.ui.progress.CatProgressDialog;
+import com.catchat.app.ui.progress.OnCatImageDecodingComplete;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;

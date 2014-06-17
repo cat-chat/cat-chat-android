@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.catchat.app.CatChatContentProvider;
+import com.catchat.app.data.CatChatContentProvider;
 import com.catchat.app.R;
 import com.catchat.app.Utils;
 import com.parse.FindCallback;
