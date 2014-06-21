@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         app:floatLabelTextAppearance="@style/AppTheme.FloatLabel.DarkOrange">
 
-        <EditText
+        <com.catchat.app.ui.auth.ShowAllItemsAutoCompleteTextView
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

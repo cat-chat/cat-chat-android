@@ -1,5 +1,8 @@
 package com.catchat.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.util.Log;
 
 import com.parse.ParseFacebookUtils;
@@ -8,6 +11,7 @@ import com.parse.ParseUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +38,7 @@ public class Utils {
     public static String getDisplayDate(String date) {
         Date dateTime = parseDate(date);
 
-        if(dateTime != null) {
+        if (dateTime != null) {
             return mDisplayDateTime.format(dateTime);
         }
 
@@ -47,6 +51,23 @@ public class Utils {
         } catch (ParseException e) {
             Log.e("CatChatTag", "Failed to parse date: " + date);
         }
+        return null;
+    }
+
+    public static List<String> getPrimaryEmailAddresses(Context context) {
+        AccountManager accountManager = AccountManager.get(context);
+        Account[] accounts = accountManager.getAccountsByType("com.google");
+
+        if (accounts.length > 0) {
+            List<String> emails = new ArrayList<String>();
+            for (Account a : accounts) {
+                if (a != null) {
+                    emails.add(a.name);
+                }
+            }
+            return emails;
+        }
+
         return null;
     }
 }

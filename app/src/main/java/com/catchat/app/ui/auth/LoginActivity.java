@@ -7,19 +7,23 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.catchat.app.R;
 import com.catchat.app.Utils;
-import com.catchat.app.ui.progress.CatProgressDialog;
 import com.catchat.app.ui.InboxActivity;
+import com.catchat.app.ui.progress.CatProgressDialog;
 import com.negusoft.holoaccent.activity.AccentActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.RequestPasswordResetCallback;
+
+import java.util.List;
 
 public class LoginActivity extends AccentActivity implements View.OnClickListener, TextWatcher {
 
@@ -28,7 +32,7 @@ public class LoginActivity extends AccentActivity implements View.OnClickListene
     private Dialog mProgressDialog;
 
     private EditText mPasswordEditText;
-    private EditText mEmailEditText;
+    private AutoCompleteTextView mEmailEditText;
 
     private boolean mResetPasswordInitialised = false;
 
@@ -44,13 +48,16 @@ public class LoginActivity extends AccentActivity implements View.OnClickListene
         mLoginButton = (Button) findViewById(R.id.login);
         mLoginButton.setOnClickListener(this);
 
-        mEmailEditText = (EditText) findViewById(R.id.email);
+        mEmailEditText = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordEditText = (EditText) findViewById(R.id.password);
 
         mEmailEditText.addTextChangedListener(this);
         mPasswordEditText.addTextChangedListener(this);
 
         setLoginButtonEnabledState();
+
+        List<String> emails = Utils.getPrimaryEmailAddresses(this);
+        mEmailEditText.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emails));
     }
 
     private void setLoginButtonEnabledState() {

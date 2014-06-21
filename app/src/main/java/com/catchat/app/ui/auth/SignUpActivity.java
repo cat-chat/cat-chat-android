@@ -7,6 +7,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,12 +21,14 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.List;
+
 
 public class SignUpActivity extends AccentActivity implements View.OnClickListener, TextWatcher {
 
     private Button mSignUpButton;
     private Dialog mProgressDialog;
-    private EditText mEmailEditText;
+    private AutoCompleteTextView mEmailEditText;
     private EditText mPasswordEditText;
 
     @Override
@@ -36,13 +40,16 @@ public class SignUpActivity extends AccentActivity implements View.OnClickListen
         mSignUpButton = (Button) findViewById(R.id.signup);
         mSignUpButton.setOnClickListener(this);
 
-        mEmailEditText = (EditText)findViewById(R.id.email);
+        mEmailEditText = (AutoCompleteTextView)findViewById(R.id.email);
         mPasswordEditText = (EditText)findViewById(R.id.password);
 
         mEmailEditText.addTextChangedListener(this);
         mPasswordEditText.addTextChangedListener(this);
 
         setSignUpButtonEnabledState();
+
+        List<String> emails = Utils.getPrimaryEmailAddresses(this);
+        mEmailEditText.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emails));
     }
 
     private void setSignUpButtonEnabledState() {
