@@ -2,24 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
     android:background="@drawable/white_background">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/message_textview"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:textColor="@color/turquoise"
-        android:textStyle="bold"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="loading something something"/>
 
     <com.catchat.app.ui.progress.SvgPathView
         android:layout_width="128dp"
@@ -30,5 +19,18 @@
         app:phase="1.0"
         app:duration="4500"
         app:strokeWidth="5"
-        app:strokeColor="@color/turquoise" />
+        app:strokeColor="@color/turquoise"
+        tools:background="@android:color/holo_red_dark"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/message_textview"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/turquoise"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="loading something something"/>
+
 </LinearLayout>

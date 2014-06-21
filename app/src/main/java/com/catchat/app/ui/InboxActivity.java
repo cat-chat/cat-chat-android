@@ -67,7 +67,6 @@ public class InboxActivity extends AccentActivity implements LoaderManager.Loade
 
             initialiseMessagesAdapter();
         }
-//        CatProgressDialog.show(this, getString(R.string.retrieving_cat_pics));
     }
 
     private void showEmailNotVerifiedWarning() {
