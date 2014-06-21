@@ -1,11 +1,12 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.HoloAccent.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.HoloAccent.Light.DarkActionBar" tools:ignore="NewApi">
         <item name="accentColor">@color/turquoise</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="android:icon">@drawable/white_logo</item>
         <item name="android:actionBarWidgetTheme">@style/AppTheme.OverflowMenu</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">

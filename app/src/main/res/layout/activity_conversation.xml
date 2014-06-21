@@ -12,6 +12,7 @@
     android:divider="@android:color/white"
     android:id="@android:id/list"
     android:stackFromBottom="true"
+    android:fitsSystemWindows="true"
     tools:context="com.catchat.app.ui.ConversationActivity">
 
 </ListView>

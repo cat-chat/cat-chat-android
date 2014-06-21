@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/gridview"
     android:numColumns="@integer/num_colums"
+    android:fitsSystemWindows="true"
     tools:context="com.catchat.app.ui.sendingmessage.CatImagePickerActivity">
 
 </GridView>
