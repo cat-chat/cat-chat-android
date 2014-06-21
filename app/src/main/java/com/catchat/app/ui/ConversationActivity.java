@@ -57,7 +57,6 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
             getActionBar().setTitle(userEmail);
         }
 
-
         final ListAdapter adapter = new ConversationAdapter(this, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         getListView().setAdapter(adapter);
         getLoaderManager().initLoader(0, null, this);
@@ -139,7 +138,7 @@ public class ConversationActivity extends ListActivity implements LoaderManager.
 
             // TODO: request elsewhere
             ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
-            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ONLY);
+            query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             query.whereEqualTo("objectId", imageId);
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override

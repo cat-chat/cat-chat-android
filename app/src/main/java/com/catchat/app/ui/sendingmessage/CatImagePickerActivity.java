@@ -48,10 +48,10 @@ public class CatImagePickerActivity extends Activity implements AdapterView.OnIt
 
         mProgressDialog = CatProgressDialog.show(CatImagePickerActivity.this, getString(R.string.retrieving_cat_pics));
 
-        pullLatestCatPicsFromCache();
+        pullLatestCatPics();
     }
 
-    private void pullLatestCatPicsFromCache() {
+    private void pullLatestCatPics() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("CatImage");
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.findInBackground(new FindCallback<ParseObject>() {
